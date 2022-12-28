@@ -30,7 +30,8 @@ public class Passenger {
     public Passenger() {
     }
 
-    public Passenger( String firstName, String lastName, String phoneNumber, String passportNumber, String email, String address) {
+    public Passenger(String firstName, String lastName, String phoneNumber, String passportNumber, String email,
+            String address) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
