@@ -11,4 +11,5 @@ public interface PassengerService {
     public abstract Passenger getPassengerById(Long passengerId);
     public abstract Passenger savePassenger(Passenger passenger);
     public abstract void deletePassengerById(Long passengerId);
+    public abstract List<Passenger> getAllPassengersByEmail(String email);
 }

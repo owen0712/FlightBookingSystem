@@ -43,4 +43,9 @@ public class PassengerServiceImpl implements PassengerService {
     public void deletePassengerById(Long passengerId) {
         passengerRepository.deleteById(passengerId);
     }
+
+    @Override
+    public List<Passenger> getAllPassengersByEmail(String email) {
+        return passengerRepository.findAllByEmail(email);
+    }
 }

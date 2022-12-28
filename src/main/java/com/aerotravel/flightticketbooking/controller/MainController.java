@@ -4,15 +4,21 @@ import com.aerotravel.flightticketbooking.model.Aircraft;
 import com.aerotravel.flightticketbooking.model.Airport;
 import com.aerotravel.flightticketbooking.model.Flight;
 import com.aerotravel.flightticketbooking.model.Passenger;
+import com.aerotravel.flightticketbooking.model.User;
 import com.aerotravel.flightticketbooking.services.AircraftService;
 import com.aerotravel.flightticketbooking.services.AirportService;
 import com.aerotravel.flightticketbooking.services.FlightService;
 import com.aerotravel.flightticketbooking.services.PassengerService;
+import com.aerotravel.flightticketbooking.services.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -36,6 +42,8 @@ public class MainController {
     FlightService flightService;
     @Autowired
     PassengerService passengerService;
+    @Autowired
+    UserService userService;
 
 
     @GetMapping("/")
@@ -310,5 +318,21 @@ public class MainController {
     @GetMapping("fancy")
     public String showLoginPage1(){
         return "index";
+    }
+
+    @GetMapping("/view/booking")
+    public String showBookingsList(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userService.findByUsername(username);
+        model.addAttribute("user", user);
+
+        List<Passenger> passengerList = passengerService.getAllPassengersByEmail(user.getEmail());
+        if (CollectionUtils.isEmpty(passengerList)) {
+            model.addAttribute("notFound", "Not Found");
+        } else {
+            model.addAttribute("passengerList", passengerList);
+        }
+        return "viewBooking";
     }
 }
