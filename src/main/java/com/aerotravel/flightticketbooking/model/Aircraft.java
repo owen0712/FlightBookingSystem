@@ -13,15 +13,13 @@ public class Aircraft {
     private String model;
     private Integer numberOfSeats;
 
-
     @OneToMany(mappedBy = "aircraft")
     private List<Flight> flights = new ArrayList<>();
-
 
     public Aircraft() {
     }
 
-    public Aircraft( String manufacturer, String model, Integer numberOfSeats) {
+    public Aircraft(String manufacturer, String model, Integer numberOfSeats) {
 
         this.manufacturer = manufacturer;
         this.model = model;
@@ -59,8 +57,6 @@ public class Aircraft {
     public void setNumberOfSeats(Integer numberOfSeats) {
         this.numberOfSeats = numberOfSeats;
     }
-
-
 
     public List<Flight> getFlights() {
         return flights;

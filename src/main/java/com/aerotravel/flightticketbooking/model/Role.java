@@ -5,36 +5,32 @@ import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @Entity
-@Table(name="roles")
+@Table(name = "roles")
 public class Role {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @Column(nullable=false, unique=true)
+    @Column(nullable = false, unique = true)
     @NotEmpty
     private String name;
 
-    @ManyToMany(mappedBy="roles")
+    @ManyToMany(mappedBy = "roles")
     private List<User> users;
 
-    public Integer getId()
-    {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Integer id)
-    {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public void setName(String name)
-    {
+    public void setName(String name) {
         this.name = name;
     }
 

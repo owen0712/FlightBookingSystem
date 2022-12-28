@@ -18,7 +18,6 @@ public class Airport {
     private String state;
     private String country;
 
-
     @OneToMany(mappedBy = "departureAirport")
     List<Flight> flights = new ArrayList<Flight>();
 
@@ -76,7 +75,6 @@ public class Airport {
     public void setAirportId(int airportId) {
         this.airportId = airportId;
     }
-
 
     public List<Flight> getFlights() {
         return flights;

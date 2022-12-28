@@ -39,10 +39,8 @@ public class Flight {
     public Flight() {
     }
 
-
-
     public Flight(String flightNumber, Airport departureAirport, Airport destinationAirport,
-                  double flightCharge, LocalDate departureDate, LocalDate arrivalDate) {
+            double flightCharge, LocalDate departureDate, LocalDate arrivalDate) {
 
         this.flightNumber = flightNumber;
         this.departureAirport = departureAirport;
