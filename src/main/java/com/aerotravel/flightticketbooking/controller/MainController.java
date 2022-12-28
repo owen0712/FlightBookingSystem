@@ -1,5 +1,6 @@
 package com.aerotravel.flightticketbooking.controller;
 
+import com.aerotravel.flightticketbooking.constants.Constants;
 import com.aerotravel.flightticketbooking.model.Aircraft;
 import com.aerotravel.flightticketbooking.model.Airport;
 import com.aerotravel.flightticketbooking.model.Application;
@@ -33,6 +34,7 @@ import javax.websocket.server.PathParam;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 public class MainController {
@@ -365,6 +367,36 @@ public class MainController {
         } else {
             model.addAttribute("passengerList", passengerList);
         }
+        return "viewBooking";
+    }
+
+    @GetMapping("/delete/application")
+    public String saveDeleteApplication(@PathParam("passengerId") long passengerId, Model model){
+        Passenger passenger = passengerService.getPassengerById(passengerId);
+        Application sameApplicationInDb = applicationService.getApplicationByPassengerAndActionAndStatus(passenger, Constants.DELETE, Constants.PENDING);
+        if (!Objects.isNull(sameApplicationInDb)) {
+            model.addAttribute("alreadyExist", "Already Exist");
+        } else {
+            Application application = new Application();
+            application.setPassenger(passenger);
+            application.setAction(Constants.DELETE);
+            application.setStatus(Constants.PENDING);
+            applicationService.saveApplication(application);
+            model.addAttribute("successful", "Successful");
+        }
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userService.findByUsername(username);
+        model.addAttribute("user", user);
+
+        List<Passenger> passengerList = passengerService.getAllPassengersByEmail(user.getEmail());
+        if (CollectionUtils.isEmpty(passengerList)) {
+            model.addAttribute("notFound", "Not Found");
+        } else {
+            model.addAttribute("passengerList", passengerList);
+        }
+
         return "viewBooking";
     }
 }

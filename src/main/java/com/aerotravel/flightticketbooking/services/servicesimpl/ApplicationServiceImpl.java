@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.aerotravel.flightticketbooking.model.Application;
+import com.aerotravel.flightticketbooking.model.Passenger;
 import com.aerotravel.flightticketbooking.repository.ApplicationRepository;
 import com.aerotravel.flightticketbooking.services.ApplicationService;
 
@@ -46,5 +47,10 @@ public class ApplicationServiceImpl implements ApplicationService {
         String currentPrincipalName = authentication.getName();
         System.out.println(currentPrincipalName);
         return applicationRepository.findAll(PageRequest.of(pageNum, 5, Sort.by("status")));
+    }
+
+    @Override
+    public Application getApplicationByPassengerAndActionAndStatus(Passenger passenger, String action, String status) {
+        return applicationRepository.findByPassengerAndActionAndStatus(passenger, action, status);
     }
 }
