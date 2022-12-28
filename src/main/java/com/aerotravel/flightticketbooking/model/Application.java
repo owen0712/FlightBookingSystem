@@ -16,4 +16,36 @@ public class Application {
     private String action;
     private String status;
 
+    public int getApplicationId(){
+        return applicationId;
+    }
+
+    public void setApplicationId(int applicationId){
+        this.applicationId = applicationId;
+    }
+
+    public Passenger getPassenger(){
+        return passenger;
+    }
+
+    public void setPassenger(Passenger passenger){
+        this.passenger = passenger;
+    }
+
+    public String getAction(){
+        return action;
+    }
+
+    public void setAction(String action){
+        this.action = action;
+    }
+
+    public String getStatus(){
+        return status;
+    }
+
+    public void setStatus(String status){
+        this.status = status;
+    }
+
 }

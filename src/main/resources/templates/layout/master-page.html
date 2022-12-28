@@ -53,6 +53,12 @@
                         <a class="nav-link" href="/flight/book/verify">Verify Booking</a>
                     </li>
 
+                    <th:block sec:authorize="hasRole('ROLE_AGENT')">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/userapplications">Applications</a>
+                        </li>
+                    </th:block>
+
 
                 </ul>
                 <div sec:authorize="isAuthenticated()">

@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import javax.sql.DataSource;
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, proxyTargetClass = true)
@@ -46,10 +47,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/", "/flight/search","/flight/book/verify", "/flight/book/cancel", "/img/**").permitAll()
-                .antMatchers( "/flight/book**", "/flight/book/new", "/view/booking").hasRole("AGENT")
+                .antMatchers( "/flight/book**", "/flight/book/new", "/view/booking", "/userapplications/**").hasRole("AGENT")
                 .antMatchers("/**").hasRole("ADMIN")
-
-
 
                 .anyRequest().authenticated()
                 .and()

@@ -3,7 +3,12 @@ package com.aerotravel.flightticketbooking.services.servicesimpl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.aerotravel.flightticketbooking.model.Application;
 import com.aerotravel.flightticketbooking.repository.ApplicationRepository;
@@ -28,5 +33,18 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public void deleteApplicationById(long applicationId) {
         applicationRepository.deleteById(applicationId);
+    }
+
+    @Override
+    public Page<Application> getAllApplicationsPaged(int pageNum) {
+        return applicationRepository.findAll(PageRequest.of(pageNum, 5, Sort.by("status")));
+    }
+
+    @Override
+    public Page<Application> getUserApplicationsPaged(int pageNum) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+        System.out.println(currentPrincipalName);
+        return applicationRepository.findAll(PageRequest.of(pageNum, 5, Sort.by("status")));
     }
 }
