@@ -21,7 +21,7 @@
         </th:block>
 
         <th:block th:if="${!passengers.isEmpty()}">
-            <form action="/application/new" method="post" th:object="${application}">
+            <form action="/application/new" method="post" th:object="${applications}">
                 <div class="row">
                     <div class="from-group col-md-12">
                         <label class="col-form-label" for="action">Application Type</label>
@@ -50,6 +50,13 @@
 
                 </div>
             </form>
+        </th:block>
+        <th:block th:if="${successful != null}">
+            <div class="col-12">
+                <p style="text-align: center; margin-top: 30px; color: green; font-weight: bold">Your delete application
+                    is sent
+                    successfully!</p>
+            </div>
         </th:block>
     </th:block>
 </body>

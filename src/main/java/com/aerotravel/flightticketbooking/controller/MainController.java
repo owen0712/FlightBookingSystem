@@ -328,7 +328,7 @@ public class MainController {
         if (applicationList.isEmpty()) {
             model.addAttribute("notFound", "Not Found");
         } else {
-            model.addAttribute("applications", applicationList);
+            model.addAttribute("applicationsssss", applicationList);
             model.addAttribute("currentPage", pageNo);
         }
         return "userapplications";
@@ -336,7 +336,7 @@ public class MainController {
 
     @GetMapping("/userapplications/new")
     public String showNewApplicationPage(Model model) {
-        model.addAttribute("application", new Application());
+        model.addAttribute("applications", new Application());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User user = userService.findByUsername(username);
@@ -346,26 +346,23 @@ public class MainController {
 
     @PostMapping("/application/new")
     public String createNewApplication(@RequestParam(defaultValue = "0") int pageNo,
-            @Valid @ModelAttribute("application") Application application,
+            @Valid @ModelAttribute("applications") Application application,
             BindingResult bindingResult, Model model) {
-        System.out.println("Asdadsdasd");
 
         if (Objects.isNull(application)) {
             model.addAttribute("alreadyExist", "Already Exist");
         } else {
-            System.out.println(application.getApplicationId());
+            application.setStatus(Constants.PENDING);
             applicationService.saveApplication(application);
+            model.addAttribute("successful", "Successful");
 
-            Page<Application> applicationList = applicationService.getUserApplicationsPaged(pageNo);
-            if (applicationList.isEmpty()) {
-                model.addAttribute("notFound", "Not Found");
-            } else {
-                model.addAttribute("applications", applicationList);
-                model.addAttribute("currentPage", pageNo);
-            }
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();
+            User user = userService.findByUsername(username);
+            model.addAttribute("passengers", passengerService.getAllPassengersByEmail(user.getEmail()));
         }
 
-        return "userapplications";
+        return "newApplication";
     }
 
     @GetMapping("/login")

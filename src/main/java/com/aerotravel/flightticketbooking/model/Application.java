@@ -1,8 +1,10 @@
 package com.aerotravel.flightticketbooking.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.GeneratedValue;
@@ -17,7 +19,8 @@ public class Application {
     @Column(name = "application_id", nullable = false)
     private int applicationId;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "passenger_passenger_id", referencedColumnName = "passengerId")
     private Passenger passenger;
 
     @Column(name = "action")
