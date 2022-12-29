@@ -18,4 +18,6 @@ public interface ApplicationService {
     public abstract Page<Application> getUserApplicationsPaged(int pageNum);
 
     public abstract Application getApplicationByPassengerAndActionAndStatus(Passenger passenger, String action, String status);
+
+    // public abstract void insertApplicationData(int applicationId, String action, String status, long passengerId);
 }

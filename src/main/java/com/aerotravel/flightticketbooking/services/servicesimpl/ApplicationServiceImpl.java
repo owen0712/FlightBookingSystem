@@ -1,7 +1,6 @@
 package com.aerotravel.flightticketbooking.services.servicesimpl;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -53,4 +52,9 @@ public class ApplicationServiceImpl implements ApplicationService {
     public Application getApplicationByPassengerAndActionAndStatus(Passenger passenger, String action, String status) {
         return applicationRepository.findByPassengerAndActionAndStatus(passenger, action, status);
     }
+
+    // @Override
+    // public void insertApplicationData(int applicationId, String action, String status, long passengerId) {
+    //     applicationRepository.insertApplicationData(applicationId, action, status, passengerId);     
+    // }
 }

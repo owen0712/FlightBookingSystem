@@ -1,44 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/master-page}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/master-page}">
 <meta charset="UTF-8">
 <title>Applications</title>
 </head>
+
 <body>
     <th:block layout:fragment="content">
-        <div class="row"  style="margin-bottom: 10px">
+        <div class="row" style="margin-bottom: 10px">
             <div class="col-md-6">
                 <h1 style="color: darkblue">Application List </h1>
             </div>
             <div class="col-md-6">
-                <a href="/userapplications/new"><button type="button" class="btn btn-outline-primary" style="float: right">Create New Application</button></a>
+                <a href="/userapplications/new"><button type="button" class="btn btn-outline-primary"
+                        style="float: right">Create New Application</button></a>
             </div>
         </div>
         <th:block th:if="${notFound != null}">
             <div class="col-12">
-            <p style="text-align: center; margin-top: 30px; color: red; font-weight: bold">No Record Found!</p>
+                <p style="text-align: center; margin-top: 30px; color: red; font-weight: bold">No Record Found!</p>
             </div>
         </th:block>
         <th:block th:if="${applications != null}">
             <table class="table table-sm">
                 <thead>
-                <tr class="table-active">
-                    <th scope="col">ID</th>
-                    <th scope="col">Application Type</th>
-                    <th scope="col">Status</th>
-
-                </tr>
+                    <tr class="table-active">
+                        <th scope="col">ID</th>
+                        <th scope="col">Application Type</th>
+                        <th scope="col">Status</th>
+                        <a href="/"><button type="button" class="btn btn-sm btn-outline-primary">Update</button></a>
+                    </tr>
                 </thead>
                 <tbody>
-                <div th:each="application, iterStat:${applications}">
-                    <tr style="background-color: #fdfdfd">
-                        <th scope="row" th:text="${application.applicationId}">Dark</th>
-                        <td th:text="${application.action}"></td>
-                        <td th:text="${application.status}"></td>
-                    </tr>
-                </div>
+                    <div th:each="application, iterStat:${applications}">
+                        <tr style="background-color: #fdfdfd">
+                            <th scope="row" th:text="${application.applicationId}">Dark</th>
+                            <td th:text="${application.action}"></td>
+                            <td th:text="${application.status}"></td>
+                        </tr>
+                    </div>
                 </tbody>
             </table>
             <div>
@@ -56,4 +57,5 @@
         </th:block>
     </th:block>
 </body>
+
 </html>

@@ -344,6 +344,30 @@ public class MainController {
         return "newApplication";
     }
 
+    @PostMapping("/application/new")
+    public String createNewApplication(@RequestParam(defaultValue = "0") int pageNo,
+            @Valid @ModelAttribute("application") Application application,
+            BindingResult bindingResult, Model model) {
+        System.out.println("Asdadsdasd");
+
+        if (Objects.isNull(application)) {
+            model.addAttribute("alreadyExist", "Already Exist");
+        } else {
+            System.out.println(application.getApplicationId());
+            applicationService.saveApplication(application);
+
+            Page<Application> applicationList = applicationService.getUserApplicationsPaged(pageNo);
+            if (applicationList.isEmpty()) {
+                model.addAttribute("notFound", "Not Found");
+            } else {
+                model.addAttribute("applications", applicationList);
+                model.addAttribute("currentPage", pageNo);
+            }
+        }
+
+        return "userapplications";
+    }
+
     @GetMapping("/login")
     public String showLoginPage() {
         return "login";
@@ -371,9 +395,10 @@ public class MainController {
     }
 
     @GetMapping("/delete/application")
-    public String saveDeleteApplication(@PathParam("passengerId") long passengerId, Model model){
+    public String saveDeleteApplication(@PathParam("passengerId") long passengerId, Model model) {
         Passenger passenger = passengerService.getPassengerById(passengerId);
-        Application sameApplicationInDb = applicationService.getApplicationByPassengerAndActionAndStatus(passenger, Constants.DELETE, Constants.PENDING);
+        Application sameApplicationInDb = applicationService.getApplicationByPassengerAndActionAndStatus(passenger,
+                Constants.DELETE, Constants.PENDING);
         if (!Objects.isNull(sameApplicationInDb)) {
             model.addAttribute("alreadyExist", "Already Exist");
         } else {
