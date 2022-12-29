@@ -328,7 +328,7 @@ public class MainController {
         if (applicationList.isEmpty()) {
             model.addAttribute("notFound", "Not Found");
         } else {
-            model.addAttribute("applicationsssss", applicationList);
+            model.addAttribute("userapplications", applicationList);
             model.addAttribute("currentPage", pageNo);
         }
         return "userapplications";

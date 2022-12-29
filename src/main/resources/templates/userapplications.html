@@ -22,7 +22,7 @@
                 <p style="text-align: center; margin-top: 30px; color: red; font-weight: bold">No Record Found!</p>
             </div>
         </th:block>
-        <th:block th:if="${applicationsssss != null}">
+        <th:block th:if="${userapplications != null}">
             <table class="table table-sm">
                 <thead>
                     <tr class="table-active">
@@ -33,13 +33,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <div th:each="temp, iterStat:${applicationsssss}">
-                        <tr style="background-color: #fdfdfd">
-                            <th scope="row" th:text="${temp.applicationId}">Dark</th>
-                            <td th:text="${temp.action}"></td>
-                            <td th:text="${temp.status}"></td>
-                        </tr>
-                    </div>
+                <div th:each="userapplication, iterStat:${userapplications}">
+                    <tr style="background-color: #fdfdfd">
+                        <th scope="row" th:text="${userapplication.applicationId}">Dark</th>
+                        <td th:text="${userapplication.action}"></td>
+                        <td th:text="${userapplication.status}"></td>
+                    </tr>
+                </div>
                 </tbody>
             </table>
             <div>
@@ -47,7 +47,7 @@
                     <li class="page-item disabled">
                         <a class="page-link" href="#">Pages:</a>
                     </li>
-                    <th:block th:each="i:${#numbers.sequence(1,applicationsssss.totalPages)}">
+                    <th:block th:each="i:${#numbers.sequence(1,userapplications.totalPages)}">
                         <li th:class="${currentPage}==(${i-1}) ? 'page-item active' : 'page-item'">
                             <a class="page-link" th:href="@{/userapplications(pageNo=(${i-1}))}" th:text="${i}"></a>
                         </li>
