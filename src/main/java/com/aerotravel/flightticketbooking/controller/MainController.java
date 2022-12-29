@@ -16,10 +16,8 @@ import com.aerotravel.flightticketbooking.services.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
@@ -33,6 +31,7 @@ import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -41,14 +40,19 @@ public class MainController {
 
     @Autowired
     AirportService airportService;
+
     @Autowired
     AircraftService aircraftService;
+
     @Autowired
     FlightService flightService;
+
     @Autowired
     PassengerService passengerService;
+
     @Autowired
     UserService userService;
+
     @Autowired
     ApplicationService applicationService;
 
@@ -336,24 +340,32 @@ public class MainController {
 
     @GetMapping("/userapplications/new")
     public String showNewApplicationPage(Model model) {
-        model.addAttribute("applications", new Application());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User user = userService.findByUsername(username);
+
+        List<String> action = new ArrayList<>();
+        action.add("Delete");
+        action.add("Update");
+
+        model.addAttribute("actions", action);
         model.addAttribute("passengers", passengerService.getAllPassengersByEmail(user.getEmail()));
+        model.addAttribute("applications", new Application());
         return "newApplication";
     }
 
     @PostMapping("/application/new")
     public String createNewApplication(@RequestParam(defaultValue = "0") int pageNo,
-            @Valid @ModelAttribute("applications") Application application,
-            BindingResult bindingResult, Model model) {
+            @RequestParam("actions") String action, @RequestParam("passenger") Passenger passenger,
+            Model model) {
 
-        if (Objects.isNull(application)) {
+        if (Objects.isNull(action) && Objects.isNull(passenger)) {
             model.addAttribute("alreadyExist", "Already Exist");
+            System.out.println("csdbrgfxxxxx");
         } else {
-            application.setStatus(Constants.PENDING);
-            applicationService.saveApplication(application);
+            System.out.println("csadcdsfdsfdsfds");
+            applicationService.insertApplicationData(action, Constants.PENDING,
+                    passenger.getPassengerId());
             model.addAttribute("successful", "Successful");
 
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

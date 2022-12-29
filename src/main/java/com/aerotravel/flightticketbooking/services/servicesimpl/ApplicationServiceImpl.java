@@ -53,8 +53,13 @@ public class ApplicationServiceImpl implements ApplicationService {
         return applicationRepository.findByPassengerAndActionAndStatus(passenger, action, status);
     }
 
-    // @Override
-    // public void insertApplicationData(int applicationId, String action, String status, long passengerId) {
-    //     applicationRepository.insertApplicationData(applicationId, action, status, passengerId);     
-    // }
+    @Override
+    public Application getApplicationByPassenger(Passenger passenger) {
+        return null;
+    }
+
+    @Override
+    public void insertApplicationData(String action, String status, long passengerId) {
+        applicationRepository.insertApplicationData(action, status, passengerId);
+    }
 }

@@ -21,23 +21,22 @@
         </th:block>
 
         <th:block th:if="${!passengers.isEmpty()}">
-            <form action="/application/new" method="post" th:object="${applications}">
+            <form action="/application/new" method="post">
                 <div class="row">
                     <div class="from-group col-md-12">
-                        <label class="col-form-label" for="action">Application Type</label>
-                        <span th:if="${#fields.hasErrors('action')}" th:errors="*{action}"
+                        <label class="col-form-label" for="actions">Application Type</label>
+                        <span th:if="${#fields.hasErrors('actions')}" th:errors="*{actions}"
                             class="badge badge-danger"></span>
-                        <select class="form-control" id="action" name="action">
-                            <option value="Delete">Delete</option>
-                            <option value="Update">Update</option>
+                        <select class="form-control" id="actions" name="actions">
+                            <option th:each="action : ${actions}" th:value="${action}" th:text="${action}"></option>
                         </select>
                     </div>
 
                     <div class="from-group col-md-4">
-                        <label class="col-form-label" for="passenger">Booking Id</label>
-                        <span th:if="${#fields.hasErrors('passenger')}" th:errors="*{passenger}"
+                        <label class="col-form-label" for="passengers">Booking Id</label>
+                        <span th:if="${#fields.hasErrors('passengers')}" th:errors="*{passengers}"
                             class="badge badge-danger"></span>
-                        <select class="form-control" id="passenger" name="passenger" (on)>
+                        <select class="form-control" id="passenger" name="passenger">
                             <option th:each="passenger, i:${passengers}" th:text="${passenger.passengerId}"
                                 th:value="${passenger}">
                             </option>
@@ -56,6 +55,13 @@
                 <p style="text-align: center; margin-top: 30px; color: green; font-weight: bold">Your delete application
                     is sent
                     successfully!</p>
+            </div>
+        </th:block>
+        <th:block th:if="${exist != null}">
+            <div class="col-12">
+                <p style="text-align: center; margin-top: 30px; color: red; font-weight: bold">Your had made same type
+                    of action to this booking,
+                    please wait for approvement!!!</p>
             </div>
         </th:block>
     </th:block>

@@ -5,7 +5,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,15 +19,15 @@ public class Application {
     @Column(name = "application_id", nullable = false)
     private int applicationId;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "passenger_passenger_id", referencedColumnName = "passengerId")
-    private Passenger passenger;
-
     @Column(name = "action")
     private String action;
 
     @Column(name = "status", nullable = false)
     private String status;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "passenger_passenger_id", referencedColumnName = "passengerId")
+    private Passenger passenger;
 
     public int getApplicationId() {
         return applicationId;

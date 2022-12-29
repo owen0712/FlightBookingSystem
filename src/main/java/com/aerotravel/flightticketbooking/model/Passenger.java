@@ -1,9 +1,11 @@
 package com.aerotravel.flightticketbooking.model;
 
+import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
@@ -13,12 +15,16 @@ public class Passenger {
     @Id
     @GeneratedValue
     private long passengerId;
+
     @NotBlank
     private String firstName;
+
     @NotBlank
     private String lastName;
+
     @NotBlank
     private String phoneNumber;
+
     @NotBlank
     private String passportNumber;
 
@@ -28,6 +34,9 @@ public class Passenger {
 
     @ManyToOne
     private Flight flight;
+
+    @OneToOne(mappedBy = "passenger")
+    private Application application;
 
     public Passenger() {
     }
