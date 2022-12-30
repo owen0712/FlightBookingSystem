@@ -1,6 +1,5 @@
 package com.aerotravel.flightticketbooking.services;
 
-import com.aerotravel.flightticketbooking.model.Aircraft;
 import com.aerotravel.flightticketbooking.model.Airport;
 import org.springframework.data.domain.Page;
 

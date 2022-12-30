@@ -356,22 +356,32 @@ public class MainController {
 
     @PostMapping("/application/new")
     public String createNewApplication(@RequestParam(defaultValue = "0") int pageNo,
-            @RequestParam("actions") String action, @RequestParam("passenger") Passenger passenger,
+            @RequestParam("actions") String action, @RequestParam("passengers") Long passengerId,
             Model model) {
 
-        if (Objects.isNull(action) && Objects.isNull(passenger)) {
-            model.addAttribute("alreadyExist", "Already Exist");
-            System.out.println("csdbrgfxxxxx");
+        if (Objects.isNull(action)) {
+            model.addAttribute("error", "action and booking id cannot be empty");
         } else {
-            System.out.println("csadcdsfdsfdsfds");
-            applicationService.insertApplicationData(action, Constants.PENDING,
-                    passenger.getPassengerId());
-            model.addAttribute("successful", "Successful");
 
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            String username = authentication.getName();
-            User user = userService.findByUsername(username);
-            model.addAttribute("passengers", passengerService.getAllPassengersByEmail(user.getEmail()));
+            Passenger passenger = passengerService.getPassengerById(passengerId);
+
+            if (applicationService.getApplicationByPassengerAndActionAndStatus(passenger, action,
+                    Constants.PENDING) != null) {
+                model.addAttribute("exist", "Same application exist ady. Please wait!");
+            } else {
+                Application application = new Application();
+                application.setAction(action);
+                application.setStatus(Constants.PENDING);
+                application.setPassengerId(passenger.getPassengerId());
+
+                applicationService.saveApplication(application);
+                model.addAttribute("successful", "Successful");
+
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                String username = authentication.getName();
+                User user = userService.findByUsername(username);
+                model.addAttribute("passengers", passengerService.getAllPassengersByEmail(user.getEmail()));
+            }
         }
 
         return "newApplication";
@@ -412,7 +422,7 @@ public class MainController {
             model.addAttribute("alreadyExist", "Already Exist");
         } else {
             Application application = new Application();
-            application.setPassenger(passenger);
+            application.setPassengerId(passenger.getPassengerId());
             application.setAction(Constants.DELETE);
             application.setStatus(Constants.PENDING);
             applicationService.saveApplication(application);

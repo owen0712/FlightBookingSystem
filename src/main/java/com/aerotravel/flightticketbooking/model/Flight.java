@@ -13,9 +13,12 @@ public class Flight {
     @Id
     @GeneratedValue
     private long flightId;
+
     private String flightNumber;
+
     @ManyToOne
     private Airport departureAirport;
+    
     @ManyToOne
     private Airport destinationAirport;
 

@@ -1,6 +1,5 @@
 package com.aerotravel.flightticketbooking.model;
 
-import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -34,9 +33,6 @@ public class Passenger {
 
     @ManyToOne
     private Flight flight;
-
-    @OneToOne(mappedBy = "passenger")
-    private Application application;
 
     public Passenger() {
     }

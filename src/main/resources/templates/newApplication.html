@@ -36,9 +36,9 @@
                         <label class="col-form-label" for="passengers">Booking Id</label>
                         <span th:if="${#fields.hasErrors('passengers')}" th:errors="*{passengers}"
                             class="badge badge-danger"></span>
-                        <select class="form-control" id="passenger" name="passenger">
+                        <select class="form-control" id="passengers" name="passengers">
                             <option th:each="passenger, i:${passengers}" th:text="${passenger.passengerId}"
-                                th:value="${passenger}">
+                                th:value="${passenger.passengerId}">
                             </option>
                         </select>
                     </div>
@@ -62,6 +62,11 @@
                 <p style="text-align: center; margin-top: 30px; color: red; font-weight: bold">Your had made same type
                     of action to this booking,
                     please wait for approvement!!!</p>
+            </div>
+        </th:block>
+        <th:block th:if="${error != null}">
+            <div class="col-12">
+                <p style="text-align: center; margin-top: 30px; color: red; font-weight: bold">{{error}}</p>
             </div>
         </th:block>
     </th:block>

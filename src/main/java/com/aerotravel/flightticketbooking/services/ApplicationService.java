@@ -11,7 +11,7 @@ public interface ApplicationService {
 
     public abstract Application saveApplication(Application application);
 
-    public abstract void deleteApplicationById(long applicationId);
+    public abstract void deleteApplicationById(Integer applicationId);
 
     public abstract Page<Application> getAllApplicationsPaged(int pageNum);
 

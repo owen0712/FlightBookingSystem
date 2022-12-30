@@ -31,7 +31,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public void deleteApplicationById(long applicationId) {
+    public void deleteApplicationById(Integer applicationId) {
         applicationRepository.deleteById(applicationId);
     }
 
@@ -50,7 +50,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public Application getApplicationByPassengerAndActionAndStatus(Passenger passenger, String action, String status) {
-        return applicationRepository.findByPassengerAndActionAndStatus(passenger, action, status);
+        return applicationRepository.findByActionAndStatusAndPassengerId(action, status, passenger.getPassengerId());
     }
 
     @Override
