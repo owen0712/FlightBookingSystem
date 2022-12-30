@@ -3,22 +3,16 @@ package com.aerotravel.flightticketbooking.service;
 import com.aerotravel.flightticketbooking.model.Aircraft;
 import com.aerotravel.flightticketbooking.repository.AircraftRepository;
 import com.aerotravel.flightticketbooking.services.AircraftService;
-import com.aerotravel.flightticketbooking.services.servicesimpl.AircraftServiceImpl;
-import org.assertj.core.api.Assertions;
-import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.AssertionErrors;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

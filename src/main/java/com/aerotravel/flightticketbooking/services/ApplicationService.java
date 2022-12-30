@@ -9,6 +9,8 @@ public interface ApplicationService {
 
     public abstract List<Application> getAllApplication();
 
+    public abstract Application getApplicationByApplicationId(Integer application);
+
     public abstract Application saveApplication(Application application);
 
     public abstract void deleteApplicationById(Integer applicationId);

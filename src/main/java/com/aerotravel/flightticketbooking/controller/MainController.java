@@ -24,6 +24,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -352,6 +353,32 @@ public class MainController {
         model.addAttribute("passengers", passengerService.getAllPassengersByEmail(user.getEmail()));
         model.addAttribute("applications", new Application());
         return "newApplication";
+    }
+
+    @GetMapping("/userapplications/update")
+    public String showUpdateApplicationPage(@RequestParam Integer applicationId, Model model){
+        Application application = applicationService.getApplicationByApplicationId(applicationId);
+        model.addAttribute("applications", application);
+
+        String actionType = application.getAction();
+        model.addAttribute("actionType", actionType);
+
+        List<String> action = new ArrayList<>();
+        action.add("Delete");
+        action.add("Update");
+
+        model.addAttribute("actions", action);
+        
+        return "updateApplication";
+    }
+
+    @PostMapping("/userapplications/update")
+    public String updateApplication(@RequestParam Integer applicationId, @RequestParam("actions") String action, Model model){
+        Application application = applicationService.getApplicationByApplicationId(applicationId);
+        if(application.getAction() == action){
+            model.addAttribute("sameAction", "same Action");
+        }
+        return "updateApplication";
     }
 
     @PostMapping("/application/new")

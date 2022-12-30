@@ -29,17 +29,22 @@
                         <th scope="col">ID</th>
                         <th scope="col">Application Type</th>
                         <th scope="col">Status</th>
-                        <a href="/"><button type="button" class="btn btn-sm btn-outline-primary">Update</button></a>
+                        <th scope="col">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                <div th:each="userapplication, iterStat:${userapplications}">
-                    <tr style="background-color: #fdfdfd">
-                        <th scope="row" th:text="${userapplication.applicationId}">Dark</th>
-                        <td th:text="${userapplication.action}"></td>
-                        <td th:text="${userapplication.status}"></td>
-                    </tr>
-                </div>
+                    <div th:each="userapplication, iterStat:${userapplications}">
+                        <tr style="background-color: #fdfdfd">
+                            <th scope="row" th:text="${userapplication.applicationId}">Dark</th>
+                            <td th:text="${userapplication.action}"></td>
+                            <td th:text="${userapplication.status}"></td>
+                            <td><a
+                                    th:href="@{/userapplications/update(applicationId=${userapplication.applicationId})}"><button
+                                        type="button" class="btn btn-outline-primary">
+                                        Update
+                                    </button></a></td>
+                        </tr>
+                    </div>
                 </tbody>
             </table>
             <div>

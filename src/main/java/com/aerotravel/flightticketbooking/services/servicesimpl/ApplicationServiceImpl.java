@@ -62,4 +62,9 @@ public class ApplicationServiceImpl implements ApplicationService {
     public void insertApplicationData(String action, String status, long passengerId) {
         applicationRepository.insertApplicationData(action, status, passengerId);
     }
+
+    @Override
+    public Application getApplicationByApplicationId(Integer applicationId){
+        return applicationRepository.findByApplicationId(applicationId);
+    }
 }

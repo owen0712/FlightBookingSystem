@@ -19,4 +19,6 @@ public interface ApplicationRepository extends JpaRepository<Application, Intege
 
     @Query("FROM Application WHERE passengerId = ?1 ")
     Application findByPassengerId(long passengerId);
+
+    Application findByApplicationId(Integer applicationId);
 }

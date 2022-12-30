@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/master-page}">
+<meta charset="UTF-8">
+<title>Update Application</title>
+</head>
+
+<body>
+    <th:block layout:fragment="content">
+        <div class="row">
+            <div class="row">
+                <div class="col-md-12" style="margin-bottom: 10px">
+                    <h1 style="color: darkblue">Update New Application </h1>
+                </div>
+            </div>
+        </div>
+
+        <th:block th:if="${applications != null}">
+            <table class="table table-sm">
+                <thead>
+                    <tr class="table-active">
+                        <th scope="col">Application Id</th>
+                        <th scope="col">Application Type</th>
+                        <th scope="col">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <form th:action="@{/userapplications/update(applicationId=${application.applicationId})}"
+                        method="post">
+                        <div th:each="userapplication, iterStat:${applications}">
+                            <tr style="background-color: #fdfdfd">
+                                <th scope="row" th:text="${userapplication.applicationId}">Dark</th>
+                                <td>
+                                    <div class="row">
+                                        <div class="from-group col-md-6">
+                                            <span th:if="${#fields.hasErrors('actions')}" th:errors="*{actions}"
+                                                class="badge badge-danger"></span>
+                                            <select class="form-control" id="actions" name="actions">
+                                                <option value="0" th:text="${actionType}"></option>
+                                                <option th:each="action , i:${actions}" th:value="${action}"
+                                                    th:text="${action}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td th:text="${userapplication.status}"></td>
+                            </tr>
+                        </div>
+                        <div class="form-group col-12">
+                            <button type="submit" class="btn btn-success" style="float: right">Update</button>
+                        </div>
+                    </form>
+                </tbody>
+            </table>
+        </th:block>
+
+        <th:block th:if="${applications != null}">
+
+        </th:block>
+
+        <th:block th:if="${sameAction != null}">
+            <div class="col-12">
+                <p style="text-align: center; margin-top: 30px; color: red; font-weight: bold">Your had made same type
+                    of action to this booking,
+                    please wait for approvement!!!</p>
+            </div>
+        </th:block>
+
+    </th:block>
+</body>
+
+</html>
