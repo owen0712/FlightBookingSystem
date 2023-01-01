@@ -356,7 +356,7 @@ public class MainController {
     }
 
     @GetMapping("/userapplications/update")
-    public String showUpdateApplicationPage(@RequestParam Integer applicationId, Model model){
+    public String showUpdateApplicationPage(@PathParam("applicationId") Integer applicationId, Model model){
         Application application = applicationService.getApplicationByApplicationId(applicationId);
         model.addAttribute("applications", application);
 
@@ -372,10 +372,23 @@ public class MainController {
         return "updateApplication";
     }
 
-    @PostMapping("/userapplications/update")
-    public String updateApplication(@RequestParam Integer applicationId, @RequestParam("actions") String action, Model model){
+    @PostMapping("/userapplications/checkUpdate")
+    public String updateApplication(@PathParam("applicationId") Integer applicationId, @RequestParam("actions") String chosenAction,
+     Model model){
         Application application = applicationService.getApplicationByApplicationId(applicationId);
-        if(application.getAction() == action){
+        model.addAttribute("applications", application);
+
+        String actionType = application.getAction();
+        model.addAttribute("actionType", actionType);
+
+        List<String> action = new ArrayList<>();
+        action.add("Delete");
+        action.add("Update");
+
+        model.addAttribute("actions", action);
+
+        if(application.getAction().equals(chosenAction)){
+            System.out.println("asdasdas");
             model.addAttribute("sameAction", "same Action");
         }
         return "updateApplication";

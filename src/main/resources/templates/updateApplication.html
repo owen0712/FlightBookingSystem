@@ -26,7 +26,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <form th:action="@{/userapplications/update(applicationId=${application.applicationId})}"
+                    <form th:action="@{/userapplications/checkUpdate(applicationId=${applications.applicationId})}"
                         method="post">
                         <div th:each="userapplication, iterStat:${applications}">
                             <tr style="background-color: #fdfdfd">
@@ -37,7 +37,7 @@
                                             <span th:if="${#fields.hasErrors('actions')}" th:errors="*{actions}"
                                                 class="badge badge-danger"></span>
                                             <select class="form-control" id="actions" name="actions">
-                                                <option value="0" th:text="${actionType}"></option>
+                                                <option th:value="${actionType}" th:text="${actionType}"></option>
                                                 <option th:each="action , i:${actions}" th:value="${action}"
                                                     th:text="${action}"></option>
                                             </select>
