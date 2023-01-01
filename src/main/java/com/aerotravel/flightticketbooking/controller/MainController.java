@@ -355,7 +355,7 @@ public class MainController {
     }
 
     @GetMapping("/userapplications/update")
-    public String showUpdateApplicationPage(@PathParam("applicationId") Integer applicationId, Model model){
+    public String showUpdateApplicationPage(@PathParam("applicationId") Integer applicationId, Model model) {
         Application application = applicationService.getApplicationByApplicationId(applicationId);
         model.addAttribute("applications", application);
 
@@ -367,13 +367,14 @@ public class MainController {
         action.add("Update");
 
         model.addAttribute("actions", action);
-        
+
         return "updateApplication";
     }
 
     @PostMapping("/userapplications/checkUpdate")
-    public String updateApplication(@PathParam("applicationId") Integer applicationId, @RequestParam("actions") String chosenAction,
-     Model model){
+    public String updateApplication(@PathParam("applicationId") Integer applicationId,
+            @RequestParam("actions") String chosenAction,
+            Model model) {
         Application application = applicationService.getApplicationByApplicationId(applicationId);
         model.addAttribute("applications", application);
 
@@ -386,13 +387,13 @@ public class MainController {
 
         model.addAttribute("actions", action);
 
-        if(application.getAction().equals(chosenAction)){
+        if (application.getAction().equals(chosenAction)) {
             model.addAttribute("sameAction", "same Action");
-        }else if(chosenAction.equals("Delete")){
+        } else if (chosenAction.equals("Delete")) {
             application.setAction(chosenAction);
             applicationService.saveApplication(application);
             model.addAttribute("successful", "Successfully");
-        }else if(chosenAction.equals("Update")){
+        } else if (chosenAction.equals("Update")) {
             Passenger passenger = passengerService.getPassengerById(application.getPassengerId());
 
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -407,10 +408,78 @@ public class MainController {
         return "updateApplication";
     }
 
-    // @PostMapping("/userapplications/updateForm")
-    // public String updateApplicationForm(Model model){
+    @PostMapping("/userapplications/updateForm")
+    public String updateApplicationForm(@Valid @ModelAttribute("passenger") Passenger passenger,
+            BindingResult bindingResult,
+            @PathParam("flightId") long flightId, @PathParam("applicationId") Integer applicationId, Model model) {
+        Application application = applicationService.getApplicationByApplicationId(applicationId);
 
-    // }
+        application.setFlightId(flightId);
+
+        String actionType = "Update";
+        application.setAction(actionType);
+        model.addAttribute("actionType", actionType);
+
+        List<String> action = new ArrayList<>();
+        action.add("Delete");
+        action.add("Update");
+        model.addAttribute("actions", action);
+
+        applicationService.saveApplication(application);
+
+        model.addAttribute("passenger", null);
+        model.addAttribute("applications", application);
+        model.addAttribute("successful", "Successfully");
+        return "updateApplication";
+    }
+
+    @PostMapping("/flight/book/updateForm")
+    public String searchFlightToBookForUpdate(@RequestParam("departureAirport") int departureAirport,
+            @RequestParam("destinationAirport") int destinationAirport,
+            @RequestParam("departureTime") String departureTime, @PathParam("applicationId") Integer applicationId,
+            Model model) {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate deptTime = LocalDate.parse(departureTime, dtf);
+        Airport depAirport = airportService.getAirportById(departureAirport);
+        Airport destAirport = airportService.getAirportById(destinationAirport);
+
+        Application application = applicationService.getApplicationByApplicationId(applicationId);
+        model.addAttribute("applications", application);
+
+        String actionType = "Update";
+        model.addAttribute("actionType", actionType);
+
+        List<String> action = new ArrayList<>();
+        action.add("Delete");
+        action.add("Update");
+
+        model.addAttribute("actions", action);
+
+        Passenger passenger = passengerService.getPassengerById(application.getPassengerId());
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userService.findByUsername(username);
+
+        model.addAttribute("users", user);
+        model.addAttribute("passenger", passenger);
+        model.addAttribute("airports", airportService.getAllAirports());
+
+        if (departureAirport == destinationAirport) {
+            model.addAttribute("AirportError", "Departure and destination airport cant be same!");
+            model.addAttribute("airports", airportService.getAllAirports());
+            return "updateApplication";
+        }
+
+        List<Flight> flights = flightService.getAllFlightsByAirportAndDepartureTime(depAirport, destAirport, deptTime);
+        if (flights.isEmpty()) {
+            model.addAttribute("notFound", "No Record Found!");
+        } else {
+            model.addAttribute("flights", flights);
+        }
+        model.addAttribute("airports", airportService.getAllAirports());
+        return "updateApplication";
+    }
 
     @PostMapping("/application/new")
     public String createNewApplication(@RequestParam(defaultValue = "0") int pageNo,

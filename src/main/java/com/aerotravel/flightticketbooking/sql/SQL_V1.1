@@ -1,2 +1,13 @@
 ALTER TABLE `ftb_db`.`application` 
 CHANGE COLUMN `application_id` `application_id` INT NOT NULL AUTO_INCREMENT ;
+
+
+ALTER TABLE `ftb_db`.`application` 
+ADD INDEX `FK_Flight_id_idx` (`flight_id` ASC) VISIBLE;
+;
+ALTER TABLE `ftb_db`.`application` 
+ADD CONSTRAINT `FK_Flight_id`
+  FOREIGN KEY (`flight_id`)
+  REFERENCES `ftb_db`.`flight` (`flight_id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
