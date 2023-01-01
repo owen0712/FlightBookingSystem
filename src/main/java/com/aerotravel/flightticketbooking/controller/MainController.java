@@ -24,7 +24,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -388,11 +387,30 @@ public class MainController {
         model.addAttribute("actions", action);
 
         if(application.getAction().equals(chosenAction)){
-            System.out.println("asdasdas");
             model.addAttribute("sameAction", "same Action");
+        }else if(chosenAction.equals("Delete")){
+            application.setAction(chosenAction);
+            applicationService.saveApplication(application);
+            model.addAttribute("successful", "Successfully");
+        }else if(chosenAction.equals("Update")){
+            Passenger passenger = passengerService.getPassengerById(application.getPassengerId());
+
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();
+            User user = userService.findByUsername(username);
+
+            model.addAttribute("users", user);
+            model.addAttribute("passenger", passenger);
+            model.addAttribute("airports", airportService.getAllAirports());
         }
+
         return "updateApplication";
     }
+
+    // @PostMapping("/userapplications/updateForm")
+    // public String updateApplicationForm(Model model){
+
+    // }
 
     @PostMapping("/application/new")
     public String createNewApplication(@RequestParam(defaultValue = "0") int pageNo,

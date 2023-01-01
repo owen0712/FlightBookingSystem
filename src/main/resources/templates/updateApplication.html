@@ -23,6 +23,7 @@
                         <th scope="col">Application Id</th>
                         <th scope="col">Application Type</th>
                         <th scope="col">Status</th>
+                        <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -45,18 +46,113 @@
                                     </div>
                                 </td>
                                 <td th:text="${userapplication.status}"></td>
+                                <td>
+                                    <div class="form-group col-12">
+                                        <button type="submit" class="btn btn-success"
+                                            style="float: right">Update</button>
+                                    </div>
+                                </td>
                             </tr>
-                        </div>
-                        <div class="form-group col-12">
-                            <button type="submit" class="btn btn-success" style="float: right">Update</button>
                         </div>
                     </form>
                 </tbody>
+
             </table>
         </th:block>
 
-        <th:block th:if="${applications != null}">
+        <th:block>
+            <tbody>
+                <form action="/userapplications/updateForm" method="post" th:if="${passenger != null}"
+                    th:object="${passenger}">
+                    <div th:each="userapplication, iterStat:${passenger}" class="from-group">
+                        <tr style="background-color: #fdfdfd">
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label class="col-form-label" for="firstName">User Id</label>
+                                    <input type="text" class="form-control" th:value="${users.id}" id="userId"
+                                        name="userId" readonly>
+                                </div>
 
+                                <div class="form-group col-md-4">
+                                    <label class="col-form-label" for="lastName">Passenger Id</label>
+                                    <input type="text" class="form-control" th:value="${passenger.passengerId}"
+                                        id="passengerId" name="passengerId" readonly>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label class="col-form-label" for="firstName">First Name</label>
+                                    <input type="text" class="form-control" th:value="${passenger.firstName}"
+                                        id="firstName" name="firstName" required>
+                                </div>
+
+                                <div class="form-group col-md-4">
+                                    <label class="col-form-label" for="lastName">Last Name</label>
+                                    <input type="text" class="form-control" th:value="${passenger.lastName}"
+                                        id="lastName" name="lastName" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label class="col-form-label" for="firstName">Phone Number</label>
+                                    <input type="text" class="form-control" th:value="${passenger.phoneNumber}"
+                                        id="firstName" name="firstName" required>
+                                </div>
+
+                                <div class="form-group col-md-4">
+                                    <label class="col-form-label" for="lastName">Passport Number</label>
+                                    <input type="text" class="form-control" th:value="${passenger.passportNumber}"
+                                        id="lastName" name="lastName" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label class="col-form-label" for="firstName">Email</label>
+                                    <input type="text" class="form-control" th:value="${passenger.email}" id="email"
+                                        name="email" readonly>
+                                </div>
+
+                                <div class="form-group col-md-4">
+                                    <label class="col-form-label" for="lastName">Flight Number</label>
+                                    <input type="text" class="form-control" th:value="${passenger.flight.flightNumber}"
+                                        id="flightNumber" name="flightNumber" readonly>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="from-group col-md-4">
+                                    <label class="col-form-label" for="departureAirport">From</label>
+                                    <select class="form-control" id="departureAirport" name="departureAirport">
+                                        <option th:each="airport, i:${airports}" th:text="${airport.airportName}"
+                                            th:value="${airport.airportId}">
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="from-group col-md-4">
+                                    <label class="col-form-label" for="destinationAirport">To</label>
+                                    <span th:if="${AirportError!=null}" th:text="${AirportError}"
+                                        class="badge badge-danger"></span>
+                                    <select class="form-control" id="destinationAirport" name="destinationAirport">
+                                        <option th:each="airport, i:${airports}" th:text="${airport.airportName}"
+                                            th:value="${airport.airportId}">
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group col-md-4">
+                                    <label class="col-form-label" for="departureTime">Departure Time</label>
+                                    <input type="date" class="form-control" th:value="${passenger.flight.departureDate}"
+                                        id="departureTime" name="departureTime" required>
+                                </div>
+                            </div>
+                            <div class="form-group col-12">
+                                <button type="submit" class="btn btn-success" style="float: right">Update</button>
+                            </div>
+                        </tr>
+                    </div>
+                </form>
+            </tbody>
         </th:block>
 
         <th:block th:if="${sameAction != null}">
@@ -67,7 +163,13 @@
             </div>
         </th:block>
 
-    </th:block>
+        <th:block th:if="${successful != null}">
+            <div class="col-12">
+                <p style="text-align: center; margin-top: 30px; color: green; font-weight: bold">Your application
+                    is updated
+                    successfully!</p>
+            </div>
+        </th:block>
 </body>
 
 </html>
