@@ -55,7 +55,7 @@
             </form>
         </th:block>
         <th:block th:if="${updateForm != null}">
-            <form th:action="@{/flight/book/updateForm(applicationId=${applications.applicationId})}" method="post">
+            <form th:action="@{/application/new/updateForm(applicationId=${applications.applicationId})}" method="post">
                 <div class="row">
                     <div class="from-group col-md-4">
                         <label class="col-form-label" for="departureAirport">From</label>
@@ -118,7 +118,7 @@
                         <tbody>
                             <div th:each="flight, iterStat:${flights}">
                                 <form
-                                    th:action="@{/application/new/updateForm(flightId=${flight.flightId},applicationId=${applications.applicationId})}"
+                                    th:action="@{/userapplications/updateForm/newApplication(flightId=${flight.flightId},applicationId=${applications.applicationId})}"
                                     method="post">
                                     <tr style="background-color: #fdfdfd">
                                         <th scope="row" th:text="${flight.flightId}">Dark</th>

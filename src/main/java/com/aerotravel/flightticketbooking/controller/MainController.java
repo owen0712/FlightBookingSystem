@@ -569,20 +569,18 @@ public class MainController {
 
         model.addAttribute("actions", action);
 
-        Passenger passenger = passengerService.getPassengerById(application.getPassengerId());
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User user = userService.findByUsername(username);
 
         model.addAttribute("users", user);
-        model.addAttribute("passenger", passenger);
+        model.addAttribute("passengers", passengerService.getAllPassengersByEmail(user.getEmail()));
         model.addAttribute("airports", airportService.getAllAirports());
 
         if (departureAirport == destinationAirport) {
             model.addAttribute("AirportError", "Departure and destination airport cant be same!");
             model.addAttribute("airports", airportService.getAllAirports());
-            return "updateApplication";
+            return "newApplication";
         }
 
         List<Flight> flights = flightService.getAllFlightsByAirportAndDepartureTime(depAirport, destAirport, deptTime);
@@ -590,9 +588,39 @@ public class MainController {
             model.addAttribute("notFound", "No Record Found!");
         } else {
             model.addAttribute("flights", flights);
+            model.addAttribute("updateForm", "updateForm");
         }
         model.addAttribute("airports", airportService.getAllAirports());
-        return "updateApplication";
+        return "newApplication";
+    }
+
+    @PostMapping("/userapplications/updateForm/newApplication")
+    public String updateApplicationFormInNewApplication(@Valid @ModelAttribute("passenger") Passenger passenger,
+            BindingResult bindingResult,
+            @PathParam("flightId") long flightId, @PathParam("applicationId") Integer applicationId, Model model) {
+        Application application = applicationService.getApplicationByApplicationId(applicationId);
+
+        application.setFlightId(flightId);
+
+        String actionType = "Update";
+        application.setAction(actionType);
+        model.addAttribute("actionType", actionType);
+
+        List<String> action = new ArrayList<>();
+        action.add("Delete");
+        action.add("Update");
+        model.addAttribute("actions", action);
+
+        applicationService.saveApplication(application);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userService.findByUsername(username);
+        
+        model.addAttribute("passengers", passengerService.getAllPassengersByEmail(user.getEmail()));
+        model.addAttribute("applications", application);
+        model.addAttribute("successful", "Successfully");
+        return "newApplication";
     }
 
     @GetMapping("/login")
