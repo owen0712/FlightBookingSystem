@@ -32,7 +32,7 @@ public class Application {
         return applicationId;
     }
 
-    public void setApplicationId(int applicationId) {
+    public void setApplicationId(Integer applicationId) {
         this.applicationId = applicationId;
     }
 

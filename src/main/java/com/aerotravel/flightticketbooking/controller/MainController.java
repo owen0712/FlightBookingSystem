@@ -505,15 +505,21 @@ public class MainController {
 
             Passenger passenger = passengerService.getPassengerById(passengerId);
 
-            if (applicationService.getApplicationByPassengerAndActionAndStatus(passenger, action,
-                    Constants.PENDING) != null
-                    || (tempApplication.getAction().equals(action) && tempApplication != null)) {
-                model.addAttribute("exist", "Same application exist ady. Please wait!");
-                String actionType = null;
-                model.addAttribute("actionType", actionType);
+            if (tempApplication != null) {
+                if ((tempApplication.getAction().equals(action))) {
+                    model.addAttribute("exist", "Same application exist ady. Please wait!");
+                    String actionType = null;
+                    model.addAttribute("actionType", actionType);
 
-                model.addAttribute("passengers", passengerService.getAllPassengersByEmail(user.getEmail()));
-                model.addAttribute("applications", new Application());
+                    model.addAttribute("passengers", passengerService.getAllPassengersByEmail(user.getEmail()));
+                    model.addAttribute("applications", new Application());
+                }else{
+                    tempApplication.setAction(action);
+
+                    applicationService.saveApplication(tempApplication);
+                    model.addAttribute("successful", "Successful");
+                    model.addAttribute("passengers", passengerService.getAllPassengersByEmail(user.getEmail()));
+                }
             } else {
                 if (action.equals("Delete") && tempApplication == null) {
                     Application application = new Application();
@@ -526,15 +532,15 @@ public class MainController {
                     model.addAttribute("passengers", passengerService.getAllPassengersByEmail(user.getEmail()));
                 } else {
                     Application application = new Application();
-                    if(tempApplication == null){
+                    if (tempApplication == null) {
                         application.setAction(action);
                         application.setStatus(Constants.PENDING);
                         application.setPassengerId(passenger.getPassengerId());
                         model.addAttribute("applications", application);
-                    }else{
+                    } else {
                         model.addAttribute("applications", tempApplication);
                     }
-                  
+
                     model.addAttribute("passengers", passengerService.getAllPassengersByEmail(user.getEmail()));
                     model.addAttribute("updateForm", "updateForm");
                     String actionType = application.getAction();
@@ -616,7 +622,7 @@ public class MainController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User user = userService.findByUsername(username);
-        
+
         model.addAttribute("passengers", passengerService.getAllPassengersByEmail(user.getEmail()));
         model.addAttribute("applications", application);
         model.addAttribute("successful", "Successfully");
