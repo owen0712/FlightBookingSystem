@@ -48,7 +48,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/", "/flight/search", "/flight/book/verify", "/flight/book/cancel", "/img/**").permitAll()
                 .antMatchers("/flight/book**", "/flight/book/new", "/view/booking", "/userapplications/**",
-                        "/application/**", "/delete/application", "/flight/book/updateForm")
+                        "/application/**", "/delete/application", "/flight/book/updateForm",
+                        "/application/new/updateForm/**")
                 .hasRole("AGENT")
                 .antMatchers("/**").hasRole("ADMIN")
 

@@ -22,7 +22,7 @@ public interface ApplicationService {
     public abstract Application getApplicationByPassengerAndActionAndStatus(Passenger passenger, String action,
             String status);
 
-    public abstract Application getApplicationByPassenger(Passenger passenger);
+    public abstract Application getApplicationByPassenger(Long passengerId);
 
     public abstract void insertApplicationData(String action, String status, long passengerId);
 }

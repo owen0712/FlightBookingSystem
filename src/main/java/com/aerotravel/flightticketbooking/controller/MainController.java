@@ -338,22 +338,6 @@ public class MainController {
         return "userapplications";
     }
 
-    @GetMapping("/userapplications/new")
-    public String showNewApplicationPage(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User user = userService.findByUsername(username);
-
-        List<String> action = new ArrayList<>();
-        action.add("Delete");
-        action.add("Update");
-
-        model.addAttribute("actions", action);
-        model.addAttribute("passengers", passengerService.getAllPassengersByEmail(user.getEmail()));
-        model.addAttribute("applications", new Application());
-        return "newApplication";
-    }
-
     @GetMapping("/userapplications/update")
     public String showUpdateApplicationPage(@PathParam("applicationId") Integer applicationId, Model model) {
         Application application = applicationService.getApplicationByApplicationId(applicationId);
@@ -481,37 +465,134 @@ public class MainController {
         return "updateApplication";
     }
 
+    @GetMapping("/userapplications/new")
+    public String showNewApplicationPage(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userService.findByUsername(username);
+
+        List<String> action = new ArrayList<>();
+        action.add("Delete");
+        action.add("Update");
+
+        String actionType = null;
+        model.addAttribute("actionType", actionType);
+
+        model.addAttribute("actions", action);
+        model.addAttribute("passengers", passengerService.getAllPassengersByEmail(user.getEmail()));
+        model.addAttribute("applications", new Application());
+        return "newApplication";
+    }
+
     @PostMapping("/application/new")
     public String createNewApplication(@RequestParam(defaultValue = "0") int pageNo,
             @RequestParam("actions") String action, @RequestParam("passengers") Long passengerId,
             Model model) {
 
+        List<String> actions = new ArrayList<>();
+        actions.add("Delete");
+        actions.add("Update");
+        model.addAttribute("actions", actions);
+
         if (Objects.isNull(action)) {
             model.addAttribute("error", "action and booking id cannot be empty");
         } else {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();
+            User user = userService.findByUsername(username);
+
+            Application tempApplication = applicationService.getApplicationByPassenger(passengerId);
 
             Passenger passenger = passengerService.getPassengerById(passengerId);
 
             if (applicationService.getApplicationByPassengerAndActionAndStatus(passenger, action,
-                    Constants.PENDING) != null) {
+                    Constants.PENDING) != null
+                    || (tempApplication.getAction().equals(action) && tempApplication != null)) {
                 model.addAttribute("exist", "Same application exist ady. Please wait!");
-            } else {
-                Application application = new Application();
-                application.setAction(action);
-                application.setStatus(Constants.PENDING);
-                application.setPassengerId(passenger.getPassengerId());
+                String actionType = null;
+                model.addAttribute("actionType", actionType);
 
-                applicationService.saveApplication(application);
-                model.addAttribute("successful", "Successful");
-
-                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-                String username = authentication.getName();
-                User user = userService.findByUsername(username);
                 model.addAttribute("passengers", passengerService.getAllPassengersByEmail(user.getEmail()));
+                model.addAttribute("applications", new Application());
+            } else {
+                if (action.equals("Delete") && tempApplication == null) {
+                    Application application = new Application();
+                    application.setAction(action);
+                    application.setStatus(Constants.PENDING);
+                    application.setPassengerId(passenger.getPassengerId());
+
+                    applicationService.saveApplication(application);
+                    model.addAttribute("successful", "Successful");
+                    model.addAttribute("passengers", passengerService.getAllPassengersByEmail(user.getEmail()));
+                } else {
+                    Application application = new Application();
+                    if(tempApplication == null){
+                        application.setAction(action);
+                        application.setStatus(Constants.PENDING);
+                        application.setPassengerId(passenger.getPassengerId());
+                        model.addAttribute("applications", application);
+                    }else{
+                        model.addAttribute("applications", tempApplication);
+                    }
+                  
+                    model.addAttribute("passengers", passengerService.getAllPassengersByEmail(user.getEmail()));
+                    model.addAttribute("updateForm", "updateForm");
+                    String actionType = application.getAction();
+                    model.addAttribute("actionType", actionType);
+                    model.addAttribute("airports", airportService.getAllAirports());
+                }
             }
         }
 
         return "newApplication";
+    }
+
+    @PostMapping("/application/new/updateForm")
+    public String searchFlightToBookForUpdateInNewApplication(@RequestParam("departureAirport") int departureAirport,
+            @RequestParam("destinationAirport") int destinationAirport,
+            @RequestParam("departureTime") String departureTime, @PathParam("applicationId") Integer applicationId,
+            Model model) {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate deptTime = LocalDate.parse(departureTime, dtf);
+        Airport depAirport = airportService.getAirportById(departureAirport);
+        Airport destAirport = airportService.getAirportById(destinationAirport);
+
+        Application application = applicationService.getApplicationByApplicationId(applicationId);
+        model.addAttribute("applications", application);
+
+        String actionType = "Update";
+        model.addAttribute("actionType", actionType);
+
+        List<String> action = new ArrayList<>();
+        action.add("Delete");
+        action.add("Update");
+
+        model.addAttribute("actions", action);
+
+        Passenger passenger = passengerService.getPassengerById(application.getPassengerId());
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userService.findByUsername(username);
+
+        model.addAttribute("users", user);
+        model.addAttribute("passenger", passenger);
+        model.addAttribute("airports", airportService.getAllAirports());
+
+        if (departureAirport == destinationAirport) {
+            model.addAttribute("AirportError", "Departure and destination airport cant be same!");
+            model.addAttribute("airports", airportService.getAllAirports());
+            return "updateApplication";
+        }
+
+        List<Flight> flights = flightService.getAllFlightsByAirportAndDepartureTime(depAirport, destAirport, deptTime);
+        if (flights.isEmpty()) {
+            model.addAttribute("notFound", "No Record Found!");
+        } else {
+            model.addAttribute("flights", flights);
+        }
+        model.addAttribute("airports", airportService.getAllAirports());
+        return "updateApplication";
     }
 
     @GetMapping("/login")

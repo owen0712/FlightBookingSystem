@@ -54,8 +54,8 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public Application getApplicationByPassenger(Passenger passenger) {
-        return null;
+    public Application getApplicationByPassenger(Long passengerId) {
+        return applicationRepository.findByPassengerId(passengerId);
     }
 
     @Override
