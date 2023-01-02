@@ -6,6 +6,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import com.aerotravel.flightticketbooking.constants.Constants;
+
 
 @Entity
 @Table(name = "passenger")
@@ -30,6 +32,8 @@ public class Passenger {
 
     private String address;
 
+    private String status;
+
     @ManyToOne
     private Flight flight;
 
@@ -44,6 +48,7 @@ public class Passenger {
         this.passportNumber = passportNumber;
         this.email = email;
         this.address = address;
+        this.status = Constants.ACTIVE;
     }
 
     public long getPassengerId() {
@@ -108,5 +113,13 @@ public class Passenger {
 
     public void setFlight(Flight flight) {
         this.flight = flight;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getStatus() {
+        return status;
     }
 }

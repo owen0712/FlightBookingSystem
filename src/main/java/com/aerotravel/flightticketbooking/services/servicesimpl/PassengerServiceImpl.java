@@ -3,11 +3,15 @@ package com.aerotravel.flightticketbooking.services.servicesimpl;
 import com.aerotravel.flightticketbooking.model.Passenger;
 import com.aerotravel.flightticketbooking.repository.PassengerRepository;
 import com.aerotravel.flightticketbooking.services.PassengerService;
+
+import org.apache.tomcat.util.bcel.classfile.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import com.aerotravel.flightticketbooking.constants.Constants;
+
 
 import java.util.List;
 @Service
@@ -46,6 +50,6 @@ public class PassengerServiceImpl implements PassengerService {
 
     @Override
     public List<Passenger> getAllPassengersByEmail(String email) {
-        return passengerRepository.findAllByEmail(email);
+        return passengerRepository.findAllByEmailAndStatusEquals(email, Constants.ACTIVE);
     }
 }

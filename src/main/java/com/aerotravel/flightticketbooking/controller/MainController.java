@@ -328,7 +328,7 @@ public class MainController {
         String username = authentication.getName();
         User user = userService.findByUsername(username);
 
-        Page<Application> applicationList = applicationService.getUserApplicationsPaged(pageNo,user.getId());
+        Page<Application> applicationList = applicationService.getUserApplicationsPaged(pageNo, user.getId());
         if (applicationList.isEmpty()) {
             model.addAttribute("notFound", "Not Found");
         } else {
@@ -429,7 +429,7 @@ public class MainController {
         model.addAttribute("passenger", passenger);
         model.addAttribute("users", user);
 
-        if(application.getFlightId()!=null){
+        if (application.getFlightId() != null) {
             Flight flight = flightService.getFlightById(application.getFlightId());
             model.addAttribute("flight", flight);
         }
@@ -533,7 +533,7 @@ public class MainController {
 
                     model.addAttribute("passengers", passengerService.getAllPassengersByEmail(user.getEmail()));
                     model.addAttribute("applications", new Application());
-                }else{
+                } else {
                     tempApplication.setAction(action);
 
                     applicationService.saveApplication(tempApplication);
@@ -727,57 +727,50 @@ public class MainController {
         String actionType = application.getAction();
         model.addAttribute("actionType", actionType);
 
-
         if (actionType.equals(Constants.UPDATE)) {
             Flight newFlight = flightService.getFlightById(application.getFlightId());
             model.addAttribute("newFlight", newFlight);
         }
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            String username = authentication.getName();
-            User user = userService.findByUsername(username);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userService.findByUsername(username);
 
-            model.addAttribute("users", user);
-            Flight flight = passenger.getFlight();
-            Airport departureAirport = flight.getDepartureAirport();
-            Airport destinationAirport = flight.getDestinationAirport();
-            model.addAttribute("flight", flight);
+        model.addAttribute("users", user);
+        Flight flight = passenger.getFlight();
+        Airport departureAirport = flight.getDepartureAirport();
+        Airport destinationAirport = flight.getDestinationAirport();
+        model.addAttribute("flight", flight);
         return "viewAdminApplication";
     }
 
-    // @PostMapping("/userapplications/checkUpdate")
-    // public String updateApplication(@PathParam("applicationId") Integer applicationId,
-    //         @RequestParam("actions") String chosenAction,
-    //         Model model) {
-    //     Application application = applicationService.getApplicationByApplicationId(applicationId);
-    //     model.addAttribute("applications", application);
+    @PostMapping("/adminapplication/approveOrReject")
+    public String approveOrRejectAdminApplication(@RequestParam("applicationId") Integer applicationId,
+            @RequestParam("currentAction") String currentAction, Model model) {
+        Application application = applicationService.getApplicationByApplicationId(applicationId);
+        String actionType = application.getAction();
+        Passenger passenger = passengerService.getPassengerById(application.getPassengerId());
 
-    //     String actionType = application.getAction();
-    //     model.addAttribute("actionType", actionType);
+        if (currentAction.equals("approve")) {
+            if (actionType.equals(Constants.UPDATE)) {
+                Flight flight = flightService.getFlightById(application.getFlightId());
+                passenger.setFlight(flight);
+            } else {
+                // applicationService.deleteApplicationById(applicationId);
+                // Long passengerId = application.getPassengerId();
+                // passengerService.deletePassengerById(passengerId);
+                passenger.setStatus(Constants.INACTIVE);
+                passengerService.savePassenger(passenger);
+            }
+            application.setStatus(Constants.APPROVED);
+            applicationService.saveApplication(application);
+        } else {
+            application.setStatus(Constants.REJECTED);
+            applicationService.saveApplication(application);
+        }
 
-    //     List<String> action = new ArrayList<>();
-    //     action.add("Delete");
-    //     action.add("Update");
+        model.addAttribute("adminapplications", applicationService.getAllApplicationsPaged(0));
+        model.addAttribute("currentPage", 0);
 
-    //     model.addAttribute("actions", action);
-
-    //     if (application.getAction().equals(chosenAction)) {
-    //         model.addAttribute("sameAction", "same Action");
-    //     } else if (chosenAction.equals("Delete")) {
-    //         application.setAction(chosenAction);
-    //         applicationService.saveApplication(application);
-    //         model.addAttribute("successful", "Successfully");
-    //     } else if (chosenAction.equals("Update")) {
-    //         Passenger passenger = passengerService.getPassengerById(application.getPassengerId());
-
-    //         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    //         String username = authentication.getName();
-    //         User user = userService.findByUsername(username);
-
-    //         model.addAttribute("users", user);
-    //         model.addAttribute("passenger", passenger);
-    //         model.addAttribute("airports", airportService.getAllAirports());
-    //     }
-
-    //     return "updateApplication";
-    // }
+        return "adminapplications";
+    }
 }

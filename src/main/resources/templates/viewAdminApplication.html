@@ -27,15 +27,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <form th:action="@{/userapplications/checkUpdate(applicationId=${applications.applicationId})}"
+                    <form th:action="@{/adminapplication/approveOrReject(applicationId=${applications.applicationId})}"
                         method="post">
                         <div th:each="adminapplication, iterStat:${applications}">
                             <tr style="background-color: #fdfdfd">
                                 <th scope="row" th:text="${adminapplication.applicationId}">Dark</th>
                                 <td th:text="${actionType}"></td>
                                 <td th:text="${adminapplication.status}"></td>
-                                <td>
-                                    <button type="submit" class="btn btn-success" style="">Approve</button>
+                                <td th:if="${adminapplication.status != 'Approved'}">
+                                    <button type="submit" name="currentAction" value="approve" class="btn btn-success" style="">Approve</button>
+                                    <button type="submit" name="currentAction" value="reject" class="btn btn-secondary" style="">Reject</button>
                                 </td>
                             </tr>
                         </div>

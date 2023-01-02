@@ -21,3 +21,6 @@ ADD CONSTRAINT `FK_User_id`
   REFERENCES `ftb_db`.`users` (`id`)
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
+
+ALTER TABLE `ftb_db`.`passenger` 
+ADD status varchar(255) DEFAULT('Active');
