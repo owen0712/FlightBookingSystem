@@ -11,3 +11,13 @@ ADD CONSTRAINT `FK_Flight_id`
   REFERENCES `ftb_db`.`flight` (`flight_id`)
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
+
+ALTER TABLE `ftb_db`.`application` 
+ADD INDEX `FK_User_id_idx` (`user_id` ASC) VISIBLE;
+;
+ALTER TABLE `ftb_db`.`application` 
+ADD CONSTRAINT `FK_User_id`
+  FOREIGN KEY (`user_id`)
+  REFERENCES `ftb_db`.`users` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;

@@ -17,7 +17,7 @@ public interface ApplicationService {
 
     public abstract Page<Application> getAllApplicationsPaged(int pageNum);
 
-    public abstract Page<Application> getUserApplicationsPaged(int pageNum);
+    public abstract Page<Application> getUserApplicationsPaged(int pageNum, Integer userId);
 
     public abstract Application getApplicationByPassengerAndActionAndStatus(Passenger passenger, String action,
             String status);

@@ -38,11 +38,20 @@
                             <th scope="row" th:text="${userapplication.applicationId}">Dark</th>
                             <td th:text="${userapplication.action}"></td>
                             <td th:text="${userapplication.status}"></td>
-                            <td><a
-                                    th:href="@{/userapplications/update(applicationId=${userapplication.applicationId})}"><button
+                            <td>
+                                <a th:href="@{/userapplications/view(applicationId=${userapplication.applicationId})}">
+                                    <button
+                                    type="button" class="btn btn-outline-primary">
+                                    View
+                                    </button>
+                                </a>
+                                <a th:href="@{/userapplications/update(applicationId=${userapplication.applicationId})}">
+                                    <button
                                         type="button" class="btn btn-outline-primary">
                                         Update
-                                    </button></a></td>
+                                    </button>
+                                </a>
+                            </td>
                         </tr>
                     </div>
                 </tbody>

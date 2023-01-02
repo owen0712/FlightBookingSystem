@@ -38,7 +38,7 @@
                                             <span th:if="${#fields.hasErrors('actions')}" th:errors="*{actions}"
                                                 class="badge badge-danger"></span>
                                             <select class="form-control" id="actions" name="actions">
-                                                <option th:value="${actionType}" th:text="${actionType}"></option>
+                                                <option th:value="${actionType}" th:text="${actionType}" selected hidden disabled></option>
                                                 <option th:each="action , i:${actions}" th:value="${action}"
                                                     th:text="${action}"></option>
                                             </select>
@@ -66,52 +66,52 @@
                     <div th:each="userapplication, iterStat:${passenger}" class="from-group">
                         <tr style="background-color: #fdfdfd">
                             <div class="row">
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-6">
                                     <label class="col-form-label" for="firstName">User Id</label>
                                     <input type="text" class="form-control" th:value="${users.id}" id="userId"
                                         name="userId" readonly>
                                 </div>
 
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-6">
                                     <label class="col-form-label" for="lastName">Passenger Id</label>
                                     <input type="text" class="form-control" th:value="${passenger.passengerId}"
                                         id="passengerId" name="passengerId" readonly>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-6">
                                     <label class="col-form-label" for="firstName">First Name</label>
                                     <input type="text" class="form-control" th:value="${passenger.firstName}"
                                         id="firstName" name="firstName" readonly>
                                 </div>
 
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-6">
                                     <label class="col-form-label" for="lastName">Last Name</label>
                                     <input type="text" class="form-control" th:value="${passenger.lastName}"
                                         id="lastName" name="lastName" readonly>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-6">
                                     <label class="col-form-label" for="firstName">Phone Number</label>
                                     <input type="text" class="form-control" th:value="${passenger.phoneNumber}"
                                         id="firstName" name="firstName" readonly>
                                 </div>
 
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-6">
                                     <label class="col-form-label" for="lastName">Passport Number</label>
                                     <input type="text" class="form-control" th:value="${passenger.passportNumber}"
                                         id="lastName" name="lastName" readonly>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-6">
                                     <label class="col-form-label" for="firstName">Email</label>
                                     <input type="text" class="form-control" th:value="${passenger.email}" id="email"
                                         name="email" readonly>
                                 </div>
 
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-6">
                                     <label class="col-form-label" for="lastName">Flight Number</label>
                                     <input type="text" class="form-control" th:value="${passenger.flight.flightNumber}"
                                         id="flightNumber" name="flightNumber" readonly>
@@ -208,7 +208,8 @@
                                         </td>
                                         <td><span th:if="${flight.passengers.size()>flight.aircraft.numberOfSeats}">
                                                 Not have available seat anymore!!!
-                                            </span></td>
+                                            </span>
+                                        </td>
                                     </tr>
                                 </form>
                             </div>
@@ -216,9 +217,6 @@
                     </table>
                 </th:block>
             </div>
-            <!-- <div class="form-group col-12">
-                <button type="submit" class="btn btn-success" style="float: right">Update</button>
-            </div> -->
         </th:block>
 
         <th:block th:if="${sameAction != null}">

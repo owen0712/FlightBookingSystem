@@ -28,6 +28,9 @@ public class Application {
     @Column(name = "flight_id")
     private Long flightId;
 
+    @Column(name = "user_id")
+    private Integer userId;
+
     public Integer getApplicationId() {
         return applicationId;
     }
@@ -66,5 +69,13 @@ public class Application {
 
     public void setFlightId(Long flightId) {
         this.flightId = flightId;
+    }
+
+    public Integer getUserId() {
+        return this.userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 }

@@ -41,11 +41,8 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public Page<Application> getUserApplicationsPaged(int pageNum) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentPrincipalName = authentication.getName();
-        System.out.println(currentPrincipalName);
-        return applicationRepository.findAll(PageRequest.of(pageNum, 5, Sort.by("status")));
+    public Page<Application> getUserApplicationsPaged(int pageNum, Integer userId) {
+        return applicationRepository.findByUserId(userId,PageRequest.of(pageNum, 5, Sort.by("status")));
     }
 
     @Override

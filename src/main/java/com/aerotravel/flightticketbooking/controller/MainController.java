@@ -328,7 +328,7 @@ public class MainController {
         String username = authentication.getName();
         User user = userService.findByUsername(username);
 
-        Page<Application> applicationList = applicationService.getUserApplicationsPaged(pageNo);
+        Page<Application> applicationList = applicationService.getUserApplicationsPaged(pageNo,user.getId());
         if (applicationList.isEmpty()) {
             model.addAttribute("notFound", "Not Found");
         } else {
@@ -415,6 +415,26 @@ public class MainController {
         model.addAttribute("applications", application);
         model.addAttribute("successful", "Successfully");
         return "updateApplication";
+    }
+
+    @GetMapping("/userapplications/view")
+    public String viewApplicationDetails(@PathParam("applicationId") Integer applicationId, Model model) {
+        Application application = applicationService.getApplicationByApplicationId(applicationId);
+        Passenger passenger = passengerService.getPassengerById(application.getPassengerId());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userService.findByUsername(username);
+
+        model.addAttribute("userapplication", application);
+        model.addAttribute("passenger", passenger);
+        model.addAttribute("users", user);
+
+        if(application.getFlightId()!=null){
+            Flight flight = flightService.getFlightById(application.getFlightId());
+            model.addAttribute("flight", flight);
+        }
+
+        return "viewApplication";
     }
 
     @PostMapping("/flight/book/updateForm")
@@ -657,6 +677,10 @@ public class MainController {
 
     @GetMapping("/delete/application")
     public String saveDeleteApplication(@PathParam("passengerId") long passengerId, Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userService.findByUsername(username);
+
         Passenger passenger = passengerService.getPassengerById(passengerId);
         Application sameApplicationInDb = applicationService.getApplicationByPassengerAndActionAndStatus(passenger,
                 Constants.DELETE, Constants.PENDING);
@@ -667,13 +691,11 @@ public class MainController {
             application.setPassengerId(passenger.getPassengerId());
             application.setAction(Constants.DELETE);
             application.setStatus(Constants.PENDING);
+            application.setUserId(user.getId());
             applicationService.saveApplication(application);
             model.addAttribute("successful", "Successful");
         }
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User user = userService.findByUsername(username);
         model.addAttribute("user", user);
 
         List<Passenger> passengerList = passengerService.getAllPassengersByEmail(user.getEmail());

@@ -14,7 +14,7 @@
         </div>
 
         <th:block th:if="${passengers.isEmpty()}">
-            <div class="col-12">
+            <div class="col-md-12">
                 <p style="text-align: center; margin-top: 30px; color: red; font-weight: bold">You currently do not have
                     any active booking!</p>
             </div>
@@ -36,7 +36,7 @@
                         </div>
                     </div>
 
-                    <div class="from-group col-md-4">
+                    <div class="from-group col-md-8">
                         <label class="col-form-label" for="passengers">Booking Id</label>
                         <span th:if="${#fields.hasErrors('passengers')}" th:errors="*{passengers}"
                             class="badge badge-danger"></span>
