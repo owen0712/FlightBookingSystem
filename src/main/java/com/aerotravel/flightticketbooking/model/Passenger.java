@@ -32,12 +32,14 @@ public class Passenger {
 
     private String address;
 
+    @NotBlank
     private String status;
 
     @ManyToOne
     private Flight flight;
 
     public Passenger() {
+        this.status = Constants.ACTIVE;
     }
 
     public Passenger(String firstName, String lastName, String phoneNumber, String passportNumber, String email,
@@ -48,7 +50,6 @@ public class Passenger {
         this.passportNumber = passportNumber;
         this.email = email;
         this.address = address;
-        this.status = Constants.ACTIVE;
     }
 
     public long getPassengerId() {
