@@ -59,6 +59,12 @@
                         </li>
                     </th:block>
 
+                    <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/adminapplications">All Applications</a>
+                        </li>
+                    </th:block>
+
 
                 </ul>
                 <div sec:authorize="isAuthenticated()">

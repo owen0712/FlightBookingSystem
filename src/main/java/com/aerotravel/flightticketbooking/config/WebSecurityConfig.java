@@ -51,7 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/application/**", "/delete/application", "/flight/book/updateForm",
                         "/application/new/updateForm/**")
                 .hasRole("AGENT")
-                .antMatchers("/**").hasRole("ADMIN")
+                .antMatchers("/**", "/adminapplications/**", "/adminapplication/**").hasRole("ADMIN")
 
                 .anyRequest().authenticated()
                 .and()

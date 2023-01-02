@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/master-page}">
+<meta charset="UTF-8">
+<title>Applications</title>
+</head>
+
+<body>
+    <th:block layout:fragment="content">
+        <div class="row" style="margin-bottom: 10px">
+            <div class="col-md-6">
+                <h1 style="color: darkblue">Application List </h1>
+            </div>
+        </div>
+        <th:block th:if="${notFound != null}">
+            <div class="col-12">
+                <p style="text-align: center; margin-top: 30px; color: red; font-weight: bold">No Record Found!</p>
+            </div>
+        </th:block>
+        <th:block th:if="${adminapplications != null}">
+            <table class="table table-sm">
+                <thead>
+                    <tr class="table-active">
+                        <th scope="col">ID</th>
+                        <th scope="col">Application Type</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <div th:each="adminapplication, iterStat:${adminapplications}">
+                        <tr style="background-color: #fdfdfd">
+                            <th scope="row" th:text="${adminapplication.applicationId}">Dark</th>
+                            <td th:text="${adminapplication.action}"></td>
+                            <td th:text="${adminapplication.status}"></td>
+                            <td><a
+                                    th:href="@{/adminapplication/view(applicationId=${adminapplication.applicationId})}"><button
+                                        type="button" class="btn btn-outline-primary">
+                                        View
+                                    </button></a></td>
+                        </tr>
+                    </div>
+                </tbody>
+            </table>
+            <div>
+                <ul class="pagination">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#">Pages:</a>
+                    </li>
+                    <th:block th:each="i:${#numbers.sequence(1,adminapplications.totalPages)}">
+                        <li th:class="${currentPage}==(${i-1}) ? 'page-item active' : 'page-item'">
+                            <a class="page-link" th:href="@{/adminapplications(pageNo=(${i-1}))}" th:text="${i}"></a>
+                        </li>
+                    </th:block>
+                </ul>
+            </div>
+        </th:block>
+    </th:block>
+</body>
+
+</html>
