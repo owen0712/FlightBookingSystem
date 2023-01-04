@@ -514,25 +514,27 @@ public class MainController {
         actions.add("Update");
         model.addAttribute("actions", actions);
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userService.findByUsername(username);
+
         if (Objects.isNull(action)) {
             model.addAttribute("error", "action and booking id cannot be empty");
         } else {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            String username = authentication.getName();
-            User user = userService.findByUsername(username);
 
             Application tempApplication = applicationService.getApplicationByPassenger(passengerId);
 
             Passenger passenger = passengerService.getPassengerById(passengerId);
 
             if (tempApplication != null) {
-                if ((tempApplication.getAction().equals(action))) {
-                    model.addAttribute("exist", "Same application exist ady. Please wait!");
+                if (tempApplication.getStatus().equals("Approved")) {
+                    model.addAttribute("existApproved", "Same application exist ady. Please wait for approvement!");
                     String actionType = null;
                     model.addAttribute("actionType", actionType);
-
-                    model.addAttribute("passengers", passengerService.getAllPassengersByEmail(user.getEmail()));
-                    model.addAttribute("applications", new Application());
+                } else if ((tempApplication.getAction().equals(action))) {
+                    model.addAttribute("exist", "Same application exist ady. Please wait for approvement!");
+                    String actionType = null;
+                    model.addAttribute("actionType", actionType);
                 } else {
                     if (action.equals("Delete")) {
                         tempApplication.setAction(action);
@@ -544,15 +546,12 @@ public class MainController {
                                 model.addAttribute("error", "You cannot update to same flight!!!!");
                             }
                             model.addAttribute("applications", tempApplication);
-                            model.addAttribute("passengers", passengerService.getAllPassengersByEmail(user.getEmail()));
                             model.addAttribute("updateForm", "updateForm");
                             String actionType = tempApplication.getAction();
                             model.addAttribute("actionType", actionType);
                             model.addAttribute("airports", airportService.getAllAirports());
                         }
                     }
-
-                    model.addAttribute("passengers", passengerService.getAllPassengersByEmail(user.getEmail()));
                 }
             } else {
                 if (action.equals("Delete") && tempApplication == null) {
@@ -563,7 +562,6 @@ public class MainController {
 
                     applicationService.saveApplication(application);
                     model.addAttribute("successful", "Successful");
-                    model.addAttribute("passengers", passengerService.getAllPassengersByEmail(user.getEmail()));
                 } else {
                     Application application = new Application();
                     if (tempApplication == null) {
@@ -575,15 +573,16 @@ public class MainController {
                         model.addAttribute("applications", tempApplication);
                     }
 
-                    model.addAttribute("passengers", passengerService.getAllPassengersByEmail(user.getEmail()));
                     model.addAttribute("updateForm", "updateForm");
                     String actionType = application.getAction();
                     model.addAttribute("actionType", actionType);
                     model.addAttribute("airports", airportService.getAllAirports());
                 }
             }
-        }
 
+        }
+        model.addAttribute("passengers", passengerService.getAllPassengersByEmail(user.getEmail()));
+        model.addAttribute("applications", new Application());
         return "newApplication";
     }
 
