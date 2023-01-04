@@ -534,10 +534,24 @@ public class MainController {
                     model.addAttribute("passengers", passengerService.getAllPassengersByEmail(user.getEmail()));
                     model.addAttribute("applications", new Application());
                 } else {
-                    tempApplication.setAction(action);
+                    if (action.equals("Delete")) {
+                        tempApplication.setAction(action);
+                        applicationService.saveApplication(tempApplication);
+                        model.addAttribute("successful", "Successful");
+                    } else {
+                        if (action.equals("Update")) {
+                            if (passenger.getFlight().getFlightId() == passengerId) {
+                                model.addAttribute("error", "You cannot update to same flight!!!!");
+                            }
+                            model.addAttribute("applications", tempApplication);
+                            model.addAttribute("passengers", passengerService.getAllPassengersByEmail(user.getEmail()));
+                            model.addAttribute("updateForm", "updateForm");
+                            String actionType = tempApplication.getAction();
+                            model.addAttribute("actionType", actionType);
+                            model.addAttribute("airports", airportService.getAllAirports());
+                        }
+                    }
 
-                    applicationService.saveApplication(tempApplication);
-                    model.addAttribute("successful", "Successful");
                     model.addAttribute("passengers", passengerService.getAllPassengersByEmail(user.getEmail()));
                 }
             } else {
@@ -621,9 +635,13 @@ public class MainController {
     }
 
     @PostMapping("/userapplications/updateForm/newApplication")
-    public String updateApplicationFormInNewApplication(@Valid @ModelAttribute("passenger") Passenger passenger,
-            BindingResult bindingResult,
+    public String updateApplicationFormInNewApplication(
             @PathParam("flightId") long flightId, @PathParam("applicationId") Integer applicationId, Model model) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userService.findByUsername(username);
+
         Application application = applicationService.getApplicationByApplicationId(applicationId);
 
         application.setFlightId(flightId);
@@ -637,15 +655,30 @@ public class MainController {
         action.add("Update");
         model.addAttribute("actions", action);
 
-        applicationService.saveApplication(application);
+        Passenger passenger = passengerService.getPassengerById(application.getPassengerId());
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User user = userService.findByUsername(username);
+        List<Passenger> passengerList = passengerService.getAllPassengersByEmail(user.getEmail());
+
+        Passenger tempPassanger = passengerList.stream()
+                .filter(customer -> passenger.getPassengerId() == (customer.getPassengerId()))
+                .findAny()
+                .orElse(null);
+
+        if (tempPassanger != null) {
+            if (tempPassanger.getFlight().getFlightId() == flightId) {
+                model.addAttribute("error", "You had update to same flight, not allowed!!!!");
+            } else {
+                applicationService.saveApplication(application);
+                model.addAttribute("successful", "Successfully");
+            }
+        } else {
+            applicationService.saveApplication(application);
+            model.addAttribute("successful", "Successfully");
+        }
 
         model.addAttribute("passengers", passengerService.getAllPassengersByEmail(user.getEmail()));
         model.addAttribute("applications", application);
-        model.addAttribute("successful", "Successfully");
+
         return "newApplication";
     }
 
