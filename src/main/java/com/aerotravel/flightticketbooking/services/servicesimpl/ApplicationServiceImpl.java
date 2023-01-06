@@ -300,6 +300,7 @@ public class ApplicationServiceImpl implements ApplicationService {
                     application.setAction(action);
                     application.setStatus(Constants.PENDING);
                     application.setPassengerId(passenger.getPassengerId());
+                    application.setUserId(user.getId());
 
                     saveApplication(application);
                     model.addAttribute("successful", "Successful");
@@ -309,6 +310,7 @@ public class ApplicationServiceImpl implements ApplicationService {
                         application.setAction(action);
                         application.setStatus(Constants.PENDING);
                         application.setPassengerId(passenger.getPassengerId());
+                        application.setUserId(user.getId());
                         model.addAttribute("applications", application);
                     } else {
                         model.addAttribute("applications", tempApplication);
