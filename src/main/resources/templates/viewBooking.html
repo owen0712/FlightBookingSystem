@@ -73,7 +73,7 @@
                 <td th:text="${passenger.flight.flightCharge}"></td>
                 <td th:text="${passenger.flight.aircraft.model}"></td>
                 <td>
-                  <a href="/"><button type="button" class="btn btn-sm btn-outline-primary">Update</button></a>
+                  <a href="/userapplications"><button type="button" class="btn btn-sm btn-outline-primary">Update</button></a>
                   <a th:href="@{/delete/application(passengerId=${passenger.passengerId})}">
                     <button type="submit" class="btn btn-sm btn-danger"
                       onclick="alert('Are you sure you want to delete?')">Delete</button>

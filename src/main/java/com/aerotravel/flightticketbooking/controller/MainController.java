@@ -693,51 +693,12 @@ public class MainController {
 
     @GetMapping("/view/booking")
     public String showBookingsList(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User user = userService.findByUsername(username);
-        model.addAttribute("user", user);
-
-        List<Passenger> passengerList = passengerService.getAllPassengersByEmail(user.getEmail());
-        if (CollectionUtils.isEmpty(passengerList)) {
-            model.addAttribute("notFound", "Not Found");
-        } else {
-            model.addAttribute("passengerList", passengerList);
-        }
-        return "viewBooking";
+        return applicationService.showBookingsList(model);
     }
 
     @GetMapping("/delete/application")
     public String saveDeleteApplication(@PathParam("passengerId") long passengerId, Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User user = userService.findByUsername(username);
-
-        Passenger passenger = passengerService.getPassengerById(passengerId);
-        Application sameApplicationInDb = applicationService.getApplicationByPassengerAndActionAndStatus(passenger,
-                Constants.DELETE, Constants.PENDING);
-        if (!Objects.isNull(sameApplicationInDb)) {
-            model.addAttribute("alreadyExist", "Already Exist");
-        } else {
-            Application application = new Application();
-            application.setPassengerId(passenger.getPassengerId());
-            application.setAction(Constants.DELETE);
-            application.setStatus(Constants.PENDING);
-            application.setUserId(user.getId());
-            applicationService.saveApplication(application);
-            model.addAttribute("successful", "Successful");
-        }
-
-        model.addAttribute("user", user);
-
-        List<Passenger> passengerList = passengerService.getAllPassengersByEmail(user.getEmail());
-        if (CollectionUtils.isEmpty(passengerList)) {
-            model.addAttribute("notFound", "Not Found");
-        } else {
-            model.addAttribute("passengerList", passengerList);
-        }
-
-        return "viewBooking";
+        return applicationService.saveDeleteApplication(passengerId, model);
     }
 
     // admin applications
