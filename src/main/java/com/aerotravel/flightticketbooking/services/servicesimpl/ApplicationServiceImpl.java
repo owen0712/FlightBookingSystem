@@ -275,6 +275,7 @@ public class ApplicationServiceImpl implements ApplicationService {
                     model.addAttribute("exist", "Same application exist ady. Please wait for approvement!");
                     String actionType = null;
                     model.addAttribute("actionType", actionType);
+                    model.addAttribute("applications", new Application());
                 } else {
                     if (action.equals("Delete")) {
                         tempApplication.setAction(action);
@@ -322,7 +323,6 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         }
         model.addAttribute("passengers", passengerService.getAllPassengersByEmail(user.getEmail()));
-        model.addAttribute("applications", new Application());
         return "newApplication";
     }
 
