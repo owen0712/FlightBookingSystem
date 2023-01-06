@@ -397,7 +397,7 @@ public class MainController {
             @RequestParam("departureTime") String departureTime, @PathParam("applicationId") Integer applicationId,
             Model model) {
         
-        return applicationService.searchFlightToBookForUpdate(departureAirport, destinationAirport, departureTime, applicationId, model)
+        return applicationService.searchFlightToBookForUpdate(departureAirport, destinationAirport, departureTime, applicationId, model);
     }
 
     @GetMapping("/userapplications/new")
