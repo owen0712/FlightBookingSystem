@@ -31,4 +31,20 @@ public interface ApplicationService {
     public abstract String showBookingsList(Model model);
 
     public abstract String saveDeleteApplication(long passengerId, Model model);
+
+    public abstract String updateApplication(Integer applicationId, String chosenAction,
+            Model model);
+
+    public abstract String updateApplicationForm(Passenger passenger,
+            long flightId, Integer applicationId, Model model);
+
+    public abstract String searchFlightToBookForUpdate(int departureAirport,
+            int destinationAirport, String departureTime, Integer applicationId, Model model);
+
+    public abstract String createNewApplication(int pageNo, String action, Long passengerId, Model model);
+
+    public abstract String searchFlightToBookForUpdateInNewApplication(int departureAirport, int destinationAirport,
+            String departureTime, Integer applicationId, Model model);
+
+    public abstract String updateApplicationFormInNewApplication(long flightId, Integer applicationId, Model model);
 }
