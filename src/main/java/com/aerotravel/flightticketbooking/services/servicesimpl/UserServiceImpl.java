@@ -50,8 +50,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean signUp(String firstName, String middleName, String lastName, String username, String email, String password, Model model) {
-        Optional<User> existingUser = userRepository.findByUsername(email);
-        if(existingUser!=null){
+        Optional<User> existingUser = userRepository.findByUsername(username);
+        if(existingUser.isPresent()){
             model.addAttribute("error", true);
             return false;
         }
