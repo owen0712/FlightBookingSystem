@@ -16,4 +16,6 @@ public class Constants {
 
     public static final String INACTIVE = "Inactive";
 
+    public static final Integer USER_ROLE = 2;
+
 }

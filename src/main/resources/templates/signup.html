@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/master-page}">
+
+<body>
+<th:block layout:fragment="content">
+    <div class="row justify-content-md-center">
+        <div class="col-md-4 jumbotron">
+            <h2 style="text-align: center">Sign Up Form</h2>
+
+            <form name="formSignUp" th:action="@{/signup}" method="post">
+                <div th:if="${param.error}" class="alert alert-dismissible alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    User Existed.
+                </div>
+                <div class="form-group">
+                    <label for="txtUsername">First Name</label>
+                    <!-- <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}"
+                          class="alert alert-danger"></span> -->
+                    <input id="txtUsername" name="firstName" type="text" class="form-control" autofocus="autofocus"/>
+                </div>
+                <div class="form-group">
+                    <label for="txtUsername">Middle Name</label>
+                    <!-- <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}"
+                          class="alert alert-danger"></span> -->
+                    <input id="txtUsername" name="middleName" type="text" class="form-control" autofocus="autofocus"/>
+                </div>
+                <div class="form-group">
+                    <label for="txtUsername">Last Name</label>
+                    <!-- <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}"
+                          class="alert alert-danger"></span> -->
+                    <input id="txtUsername" name="lastName" type="text" class="form-control" autofocus="autofocus"/>
+                </div>
+                <div class="form-group">
+                    <label for="txtUsername">Username</label>
+                    <!-- <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}"
+                          class="alert alert-danger"></span> -->
+                    <input id="txtUsername" name="username" type="text" class="form-control" autofocus="autofocus"/>
+                </div>
+                <div class="form-group">
+                    <label for="txtUsername">Email</label>
+                    <!-- <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}"
+                          class="alert alert-danger"></span> -->
+                    <input id="txtUsername" name="email" type="email" class="form-control" autofocus="autofocus"/>
+                </div>
+                <div class="form-group">
+                    <label for="txtPassword">Password</label>
+                    <!-- <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"
+                          class="alert alert-danger"></span> -->
+                    <input id="txtPassword" name="password" type="password" class="form-control"/>
+                </div>
+                <div style="float:right;">
+                    <a href="/login" class="btn btn-outline-warning">Cancel</a>&nbsp;&nbsp;&nbsp;
+                    <button id="btnSubmit" type="submit" class="btn btn-outline-success">Sign Up</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>

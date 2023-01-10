@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -65,11 +66,6 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public Page<Application> getAllApplicationsPaged(int pageNum) {
         return applicationRepository.findAll(PageRequest.of(pageNum, 5, Sort.by("status")));
-    }
-
-    @Override
-    public Page<Application> getUserApplicationsPaged(int pageNum, Integer userId) {
-        return applicationRepository.findByUserId(userId, PageRequest.of(pageNum, 5, Sort.by("status")));
     }
 
     @Override
@@ -420,4 +416,36 @@ public class ApplicationServiceImpl implements ApplicationService {
         return "newApplication";
     }
 
+    public void showApplicationsList(int pageNo, Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userService.findByUsername(username);
+
+        Page<Application> applicationList = applicationRepository.findByUserId(user.getId(),
+                PageRequest.of(pageNo, 5, Sort.by("status")));
+        if (applicationList.isEmpty()) {
+            model.addAttribute("notFound", "Not Found");
+        } else {
+            model.addAttribute("userapplications", applicationList);
+            model.addAttribute("currentPage", pageNo);
+        }
+    }
+
+    @Override
+    public void viewApplicationDetails(Integer applicationId, Model model) {
+        Application application = applicationRepository.findByApplicationId(applicationId);
+        Passenger passenger = passengerService.getPassengerById(application.getPassengerId());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userService.findByUsername(username);
+
+        model.addAttribute("userapplication", application);
+        model.addAttribute("passenger", passenger);
+        model.addAttribute("users", user);
+
+        if (application.getFlightId() != null) {
+            Flight flight = flightService.getFlightById(application.getFlightId());
+            model.addAttribute("flight", flight);
+        }
+    }
 }

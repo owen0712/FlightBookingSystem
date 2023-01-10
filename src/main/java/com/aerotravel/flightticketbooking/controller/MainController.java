@@ -15,7 +15,6 @@ import com.aerotravel.flightticketbooking.services.PassengerService;
 import com.aerotravel.flightticketbooking.services.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -324,17 +323,7 @@ public class MainController {
 
     @GetMapping("/userapplications")
     public String showApplicationsList(@RequestParam(defaultValue = "0") int pageNo, Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User user = userService.findByUsername(username);
-
-        Page<Application> applicationList = applicationService.getUserApplicationsPaged(pageNo, user.getId());
-        if (applicationList.isEmpty()) {
-            model.addAttribute("notFound", "Not Found");
-        } else {
-            model.addAttribute("userapplications", applicationList);
-            model.addAttribute("currentPage", pageNo);
-        }
+        applicationService.showApplicationsList(pageNo, model);
         return "userapplications";
     }
 
@@ -373,21 +362,7 @@ public class MainController {
 
     @GetMapping("/userapplications/view")
     public String viewApplicationDetails(@PathParam("applicationId") Integer applicationId, Model model) {
-        Application application = applicationService.getApplicationByApplicationId(applicationId);
-        Passenger passenger = passengerService.getPassengerById(application.getPassengerId());
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User user = userService.findByUsername(username);
-
-        model.addAttribute("userapplication", application);
-        model.addAttribute("passenger", passenger);
-        model.addAttribute("users", user);
-
-        if (application.getFlightId() != null) {
-            Flight flight = flightService.getFlightById(application.getFlightId());
-            model.addAttribute("flight", flight);
-        }
-
+        applicationService.viewApplicationDetails(applicationId, model);
         return "viewApplication";
     }
 
@@ -396,8 +371,9 @@ public class MainController {
             @RequestParam("destinationAirport") int destinationAirport,
             @RequestParam("departureTime") String departureTime, @PathParam("applicationId") Integer applicationId,
             Model model) {
-        
-        return applicationService.searchFlightToBookForUpdate(departureAirport, destinationAirport, departureTime, applicationId, model);
+
+        return applicationService.searchFlightToBookForUpdate(departureAirport, destinationAirport, departureTime,
+                applicationId, model);
     }
 
     @GetMapping("/userapplications/new")
@@ -493,8 +469,6 @@ public class MainController {
 
         model.addAttribute("users", user);
         Flight flight = passenger.getFlight();
-        Airport departureAirport = flight.getDepartureAirport();
-        Airport destinationAirport = flight.getDestinationAirport();
         model.addAttribute("flight", flight);
         return "viewAdminApplication";
     }
@@ -528,5 +502,20 @@ public class MainController {
         model.addAttribute("currentPage", 0);
 
         return "adminapplications";
+    }
+
+    @GetMapping("/signup")
+    public String showSignUpPage(Model model) {
+        return "signup";
+    }
+
+    @PostMapping("/signup")
+    public String signUp(@RequestParam("firstName") String firstName, @RequestParam("middleName") String middleName,
+            @RequestParam("lastName") String lastName, @RequestParam("username") String username,
+            @RequestParam("email") String email, @RequestParam("password") String password, Model model) {
+        if (!userService.signUp(firstName, middleName, lastName, username, email, password, model)) {
+            return "signup";
+        }
+        return "login";
     }
 }

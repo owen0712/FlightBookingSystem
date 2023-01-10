@@ -45,12 +45,14 @@
                                     View
                                     </button>
                                 </a>
-                                <a th:href="@{/userapplications/update(applicationId=${userapplication.applicationId})}">
-                                    <button
-                                        type="button" class="btn btn-outline-primary">
-                                        Update
-                                    </button>
-                                </a>
+                                <th:block th:if="${!userapplication.status.equals('Approved')}">
+                                    <a th:href="@{/userapplications/update(applicationId=${userapplication.applicationId})}">
+                                        <button
+                                            type="button" class="btn btn-outline-primary">
+                                            Update
+                                        </button>
+                                    </a>
+                                </th:block>
                             </td>
                         </tr>
                     </div>

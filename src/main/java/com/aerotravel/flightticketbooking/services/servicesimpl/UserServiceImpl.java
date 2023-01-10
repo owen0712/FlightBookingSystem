@@ -1,6 +1,8 @@
 package com.aerotravel.flightticketbooking.services.servicesimpl;
 
 
+import com.aerotravel.flightticketbooking.constants.Constants;
+import com.aerotravel.flightticketbooking.model.Role;
 import com.aerotravel.flightticketbooking.model.User;
 import com.aerotravel.flightticketbooking.repository.UserRepository;
 import com.aerotravel.flightticketbooking.services.UserService;
@@ -11,7 +13,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
+
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -39,5 +46,28 @@ public class UserServiceImpl implements UserService {
     public User findByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Username " + username + " not found"));
+    }
+
+    @Override
+    public boolean signUp(String firstName, String middleName, String lastName, String username, String email, String password, Model model) {
+        Optional<User> existingUser = userRepository.findByUsername(email);
+        if(existingUser!=null){
+            model.addAttribute("error", true);
+            return false;
+        }
+        User user = new User();
+        user.setFirstname(firstName);
+        user.setMiddlename(middleName);
+        user.setLastname(lastName);
+        user.setUsername(username);
+        user.setEmail(email);
+        user.setPassword(password);
+        List<Role> roles = new ArrayList<Role>();
+        Role role = new Role();
+        role.setId(Constants.USER_ROLE);
+        roles.add(role);
+        user.setRoles(roles);
+        userRepository.save(user);
+        return true;
     }
 }

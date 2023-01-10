@@ -4,7 +4,6 @@ import com.aerotravel.flightticketbooking.model.Passenger;
 import com.aerotravel.flightticketbooking.repository.PassengerRepository;
 import com.aerotravel.flightticketbooking.services.PassengerService;
 
-import org.apache.tomcat.util.bcel.classfile.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,20 +11,21 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import com.aerotravel.flightticketbooking.constants.Constants;
 
-
 import java.util.List;
+
 @Service
 public class PassengerServiceImpl implements PassengerService {
 
     private PassengerRepository passengerRepository;
 
     @Autowired
-    public PassengerServiceImpl(PassengerRepository passengerRepository){
+    public PassengerServiceImpl(PassengerRepository passengerRepository) {
         this.passengerRepository = passengerRepository;
     }
+
     @Override
     public Page<Passenger> getAllPassengersPaged(int pageNum) {
-        return passengerRepository.findAll(PageRequest.of(pageNum,5, Sort.by("lastName")));
+        return passengerRepository.findAll(PageRequest.of(pageNum, 5, Sort.by("lastName")));
     }
 
     @Override

@@ -19,8 +19,6 @@ public interface ApplicationService {
 
     public abstract Page<Application> getAllApplicationsPaged(int pageNum);
 
-    public abstract Page<Application> getUserApplicationsPaged(int pageNum, Integer userId);
-
     public abstract Application getApplicationByPassengerAndActionAndStatus(Passenger passenger, String action,
             String status);
 
@@ -47,4 +45,7 @@ public interface ApplicationService {
             String departureTime, Integer applicationId, Model model);
 
     public abstract String updateApplicationFormInNewApplication(long flightId, Integer applicationId, Model model);
+    public abstract void showApplicationsList(int pageNo, Model model);
+
+    public abstract void viewApplicationDetails(Integer applicationId, Model model);
 }

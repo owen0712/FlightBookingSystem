@@ -10,4 +10,7 @@ import java.util.List;
 public interface FlightRepository extends JpaRepository<Flight, Long> {
     List<Flight> findAllByDepartureAirportEqualsAndDestinationAirportEqualsAndDepartureDateEquals(Airport depAirport,
             Airport destAirport, LocalDate depDate);
+
+    
+    Flight findByFlightId(Long flightId);
 }

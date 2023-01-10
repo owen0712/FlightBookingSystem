@@ -92,7 +92,7 @@
             </tr>
         </div>
 
-        <th:block th:if="${flight != null}">
+        <th:block th:if="${flight != null && userapplication.action.equals('Update')}">
             <table class="table table-sm">
                 <thead>
                     <tr class="table-active">
