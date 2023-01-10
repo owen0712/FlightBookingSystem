@@ -137,7 +137,7 @@
                                                     style="float: right">Update</button></a>
                                         </td>
                                         <td><span th:if="${flight.passengers.size()>flight.aircraft.numberOfSeats}">
-                                                Not have available seat anymore!!!
+                                                Not have available seat anymore!
                                             </span></td>
                                     </tr>
                                 </form>
@@ -158,7 +158,7 @@
             <div class="col-12">
                 <p style="text-align: center; margin-top: 30px; color: red; font-weight: bold">Your had made same type
                     of action to this booking,
-                    please wait for approvement!!!</p>
+                    please wait for approvement!</p>
             </div>
         </th:block>
         <th:block th:if="${existApproved != null}">
@@ -168,7 +168,7 @@
         </th:block>
         <th:block th:if="${error != null}">
             <div class="col-12">
-                <p style="text-align: center; margin-top: 30px; color: red; font-weight: bold">You cannot update to same flight!!!!</p>
+                <p style="text-align: center; margin-top: 30px; color: red; font-weight: bold">You cannot update to same flight!</p>
             </div>
         </th:block>
     </th:block>
