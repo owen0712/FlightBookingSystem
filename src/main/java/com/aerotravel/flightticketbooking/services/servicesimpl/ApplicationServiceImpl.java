@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -261,7 +262,6 @@ public class ApplicationServiceImpl implements ApplicationService {
             Application tempApplication = getApplicationByPassenger(passengerId);
 
             Passenger passenger = passengerService.getPassengerById(passengerId);
-
             if (tempApplication != null) {
                 if (tempApplication.getStatus().equals("Approved")) {
                     model.addAttribute("existApproved", "Same application exist ady. Please wait for approvement!");
@@ -309,6 +309,7 @@ public class ApplicationServiceImpl implements ApplicationService {
                         application.setUserId(user.getId());
                         application.setFlightId(passenger.getFlight().getFlightId());
                         model.addAttribute("applications", application);
+                        model.addAttribute("passenger", passenger);
                     } else {
                         model.addAttribute("applications", tempApplication);
                     }
@@ -327,14 +328,27 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public String searchFlightToBookForUpdateInNewApplication(int departureAirport, int destinationAirport,
-            String departureTime, Integer applicationId, Model model) {
+            String departureTime, Long passengerId, Model model) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userService.findByUsername(username);
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate deptTime = LocalDate.parse(departureTime, dtf);
         Airport depAirport = airportService.getAirportById(departureAirport);
         Airport destAirport = airportService.getAirportById(destinationAirport);
 
-        Application application = getApplicationByApplicationId(applicationId);
+        Passenger passenger = passengerService.getPassengerById(passengerId);
+
+        model.addAttribute("passenger", passenger);
+
+        Application application = new Application();
+        application.setAction("Update");
+        application.setStatus(Constants.PENDING);
+        application.setPassengerId(passenger.getPassengerId());
+        application.setUserId(user.getId());
+        application.setFlightId(passenger.getFlight().getFlightId());
         model.addAttribute("applications", application);
 
         String actionType = "Update";
@@ -345,10 +359,6 @@ public class ApplicationServiceImpl implements ApplicationService {
         action.add("Update");
 
         model.addAttribute("actions", action);
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User user = userService.findByUsername(username);
 
         model.addAttribute("users", user);
         model.addAttribute("passengers", passengerService.getAllPassengersByEmail(user.getEmail()));
@@ -372,13 +382,14 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public String updateApplicationFormInNewApplication(long flightId, Integer applicationId, Model model) {
+    public String updateApplicationFormInNewApplication(long flightId, Long passengerId, Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User user = userService.findByUsername(username);
 
-        Application application = getApplicationByApplicationId(applicationId);
+        Passenger passenger = passengerService.getPassengerById(passengerId);
 
+        Application application = new Application();
         application.setFlightId(flightId);
 
         String actionType = "Update";
@@ -390,7 +401,10 @@ public class ApplicationServiceImpl implements ApplicationService {
         action.add("Update");
         model.addAttribute("actions", action);
 
-        Passenger passenger = passengerService.getPassengerById(application.getPassengerId());
+        application.setStatus(Constants.PENDING);
+        application.setPassengerId(passenger.getPassengerId());
+        application.setUserId(user.getId());
+        application.setFlightId(passenger.getFlight().getFlightId());
 
         List<Passenger> passengerList = passengerService.getAllPassengersByEmail(user.getEmail());
 

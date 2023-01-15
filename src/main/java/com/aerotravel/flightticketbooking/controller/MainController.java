@@ -406,18 +406,17 @@ public class MainController {
     @PostMapping("/application/new/updateForm")
     public String searchFlightToBookForUpdateInNewApplication(@RequestParam("departureAirport") int departureAirport,
             @RequestParam("destinationAirport") int destinationAirport,
-            @RequestParam("departureTime") String departureTime, @PathParam("applicationId") Integer applicationId,
+            @RequestParam("departureTime") String departureTime,  @PathParam("passengerId") Long passengerId,
             Model model) {
-
         return applicationService.searchFlightToBookForUpdateInNewApplication(departureAirport, destinationAirport,
-                departureTime, applicationId, model);
+                departureTime, passengerId, model);
     }
 
     @PostMapping("/userapplications/updateForm/newApplication")
     public String updateApplicationFormInNewApplication(
-            @PathParam("flightId") long flightId, @PathParam("applicationId") Integer applicationId, Model model) {
+            @PathParam("flightId") Long flightId, @PathParam("passengerId") Long passengerId, Model model) {
 
-        return applicationService.updateApplicationFormInNewApplication(flightId, applicationId, model);
+        return applicationService.updateApplicationFormInNewApplication(flightId, passengerId, model);
     }
 
     @GetMapping("/login")
