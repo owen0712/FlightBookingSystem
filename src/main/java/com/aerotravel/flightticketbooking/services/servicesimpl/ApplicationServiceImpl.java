@@ -463,4 +463,62 @@ public class ApplicationServiceImpl implements ApplicationService {
             model.addAttribute("flight", flight);
         }
     }
+    
+    @Override
+    public String showAdminApplicationPage(Integer applicationId, Model model) {
+        Application application = applicationRepository.findByApplicationId(applicationId);
+        Passenger passenger = passengerService.getPassengerById(application.getPassengerId());
+        model.addAttribute("applications", application);
+        model.addAttribute("passenger", passenger);
+        String actionType = application.getAction();
+        model.addAttribute("actionType", actionType);
+
+        if (actionType.equals(Constants.UPDATE)) {
+            Flight newFlight = flightService.getFlightById(application.getFlightId());
+            model.addAttribute("newFlight", newFlight);
+        }
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userService.findByUsername(username);
+
+        model.addAttribute("users", user);
+        Flight flight = passenger.getFlight();
+        model.addAttribute("flight", flight);
+        return "viewAdminApplication";
+    }
+
+    @Override
+    public String approveOrRejectAdminApplication(Integer applicationId, String currentAction, Model model){
+        Application application = applicationRepository.findByApplicationId(applicationId);        
+        String actionType = application.getAction();
+        Passenger passenger = passengerService.getPassengerById(application.getPassengerId());
+
+        if (currentAction.equals("approve")) {
+            if (actionType.equals(Constants.UPDATE)) {
+                Flight flight = flightService.getFlightById(application.getFlightId());
+                passenger.setFlight(flight);
+            } else {
+                passenger.setStatus(Constants.INACTIVE);
+                passengerService.savePassenger(passenger);
+            }
+            application.setStatus(Constants.APPROVED);
+            saveApplication(application);
+        } else {
+            application.setStatus(Constants.REJECTED);
+            saveApplication(application);
+        }
+
+        model.addAttribute("adminapplications", getAllApplicationsPaged(0));
+        model.addAttribute("currentPage", 0);
+
+        return "adminapplications";
+    }
+    
+    @Override
+    public String showAdminApplicationsList(int pageNo, Model model) {
+
+        model.addAttribute("adminapplications", getAllApplicationsPaged(pageNo));
+        model.addAttribute("currentPage", pageNo);
+        return "adminapplications";
+    }
 }

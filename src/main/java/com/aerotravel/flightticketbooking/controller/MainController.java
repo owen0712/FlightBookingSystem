@@ -443,64 +443,18 @@ public class MainController {
 
     @GetMapping("/adminapplications")
     public String showAdminApplicationsList(@RequestParam(defaultValue = "0") int pageNo, Model model) {
-
-        model.addAttribute("adminapplications", applicationService.getAllApplicationsPaged(pageNo));
-        model.addAttribute("currentPage", pageNo);
-        return "adminapplications";
+        return applicationService.showAdminApplicationsList(pageNo, model);
     }
 
     @GetMapping("/adminapplication/view")
     public String showAdminApplicationPage(@PathParam("applicationId") Integer applicationId, Model model) {
-        Application application = applicationService.getApplicationByApplicationId(applicationId);
-        Passenger passenger = passengerService.getPassengerById(application.getPassengerId());
-        model.addAttribute("applications", application);
-        model.addAttribute("passenger", passenger);
-        String actionType = application.getAction();
-        model.addAttribute("actionType", actionType);
-
-        if (actionType.equals(Constants.UPDATE)) {
-            Flight newFlight = flightService.getFlightById(application.getFlightId());
-            model.addAttribute("newFlight", newFlight);
-        }
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User user = userService.findByUsername(username);
-
-        model.addAttribute("users", user);
-        Flight flight = passenger.getFlight();
-        model.addAttribute("flight", flight);
-        return "viewAdminApplication";
+        return applicationService.showAdminApplicationPage(applicationId, model); 
     }
 
     @PostMapping("/adminapplication/approveOrReject")
     public String approveOrRejectAdminApplication(@RequestParam("applicationId") Integer applicationId,
             @RequestParam("currentAction") String currentAction, Model model) {
-        Application application = applicationService.getApplicationByApplicationId(applicationId);
-        String actionType = application.getAction();
-        Passenger passenger = passengerService.getPassengerById(application.getPassengerId());
-
-        if (currentAction.equals("approve")) {
-            if (actionType.equals(Constants.UPDATE)) {
-                Flight flight = flightService.getFlightById(application.getFlightId());
-                passenger.setFlight(flight);
-            } else {
-                // applicationService.deleteApplicationById(applicationId);
-                // Long passengerId = application.getPassengerId();
-                // passengerService.deletePassengerById(passengerId);
-                passenger.setStatus(Constants.INACTIVE);
-                passengerService.savePassenger(passenger);
-            }
-            application.setStatus(Constants.APPROVED);
-            applicationService.saveApplication(application);
-        } else {
-            application.setStatus(Constants.REJECTED);
-            applicationService.saveApplication(application);
-        }
-
-        model.addAttribute("adminapplications", applicationService.getAllApplicationsPaged(0));
-        model.addAttribute("currentPage", 0);
-
-        return "adminapplications";
+        return applicationService.approveOrRejectAdminApplication(applicationId, currentAction, model);
     }
 
     @GetMapping("/signup")

@@ -50,4 +50,10 @@ public interface ApplicationService {
         public abstract void showApplicationsList(int pageNo, Model model);
 
         public abstract void viewApplicationDetails(Integer applicationId, Model model);
+
+        public abstract String showAdminApplicationPage(Integer applicationId, Model model);
+
+        public abstract String approveOrRejectAdminApplication(Integer applicationId, String currentAction, Model model);
+
+        public abstract String showAdminApplicationsList(int pageNo, Model model);
 }
