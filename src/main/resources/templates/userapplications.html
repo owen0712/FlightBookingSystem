@@ -45,7 +45,7 @@
                                     View
                                     </button>
                                 </a>
-                                <th:block th:if="${!userapplication.status.equals('Approved')}">
+                                <th:block th:if="${userapplication.status.equals('Pending')}">
                                     <a th:href="@{/userapplications/update(applicationId=${userapplication.applicationId})}">
                                         <button
                                             type="button" class="btn btn-outline-primary">
